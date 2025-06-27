@@ -9,7 +9,7 @@ const addInfoValidation = [
   // body('address_modified').optional().isBoolean(),
 
   // 👇 New fields you listed
-  param("user_id").isInt().withMessage("user_id must be an integer"),
+  // param("user_id").isInt().withMessage("user_id must be an integer"),
   body("highestQualification").optional().isString(),
   body("college").optional().isString(),
   body("workWith").optional().isString(),

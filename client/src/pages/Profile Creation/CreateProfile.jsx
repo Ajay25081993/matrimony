@@ -63,9 +63,10 @@ const CreateProfile = ({ steps }) => {
         API_URLS.ADD_INFO,
         updatedUserInfo
       );
-      console.log("Res", response);
+      console.log("Res", response.data[0]);
 
-      if (response.data[0].length) {
+      if (response.data[0]) {
+        localStorage.setItem("userId", response.data[0].user_id);
         showSuccessToast(response.message, navigateTo, "/home");
       } else {
         showErrorToast(response.message);

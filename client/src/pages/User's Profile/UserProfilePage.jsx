@@ -7,7 +7,7 @@ import UserProfile from "../../components/UserProfile/UserProfile";
 const UserProfilePage = () => {
   const [userData, setUserData] = useState({});
 
-  const user_id = localStorage.getItem("user_id");
+  const user_id = localStorage.getItem("userId");
 
   const fetchData = async () => {
     try {

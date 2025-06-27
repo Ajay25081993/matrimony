@@ -10,6 +10,10 @@ import GenerateQR from "./components/GenerateQR";
 import QRScanner from "./components/QRScanner";
 
 const Landing = lazy(() => import("./pages/Landing"));
+const Viewed = lazy(() => import("./pages/Viewed/Viewed"));
+const ShortListedYou = lazy(() =>
+  import("./pages/ShortListedYou/ShortListedYou")
+);
 const MyProfile = lazy(() => import("./pages/My Profile/MyProfile"));
 const More = lazy(() => import("./pages/More/More"));
 const Settings = lazy(() => import("./pages/Settings/Settings"));
@@ -19,7 +23,12 @@ const PartnerPreferences = lazy(() =>
 );
 const Home = lazy(() => import("./pages/Home/Home"));
 const Matches = lazy(() => import("./pages/Matches/Matches"));
-const UserProfilePage = lazy(() => import("./pages/User's Profile/UserProfilePage"));
+const UserProfilePage = lazy(() =>
+  import("./pages/User's Profile/UserProfilePage")
+);
+const ShortlistOfUser = lazy(() =>
+  import("./pages/User's Shortlist/ShortlistOfUser")
+);
 const FamilyDetails = lazy(() => import("./pages/FamilyDetails/FamilyDetails"));
 const Hobby = lazy(() => import("./pages/Hobbies&Interests/Hobby"));
 const ProfilePreview = lazy(() =>
@@ -35,6 +44,9 @@ const App = () => {
     Home,
     Matches,
     UserProfilePage,
+    ShortlistOfUser,
+    Viewed,
+    ShortListedYou,
     More,
     Settings,
     MyPhotos,
@@ -55,14 +67,14 @@ const App = () => {
     "/matches/profiles-with-horoscope": "profiles-with-horoscope",
     "/matches/hobby-matches": "hobby-matches",
   };
-  const user = {
-    name: "Rudra Deb",
-    age: 24,
-    height: "5'9\"",
-    weight: "72 kg",
-    imageUrl:
-      "https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?ga=GA1.1.1426186378.1750559581&semt=ais_items_boosted&w=740", // replace with real profile pic URL
-  };
+  // const user = {
+  //   name: "Rudra Deb",
+  //   age: 24,
+  //   height: "5'9\"",
+  //   weight: "72 kg",
+  //   imageUrl:
+  //     "https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg?ga=GA1.1.1426186378.1750559581&semt=ais_items_boosted&w=740", // replace with real profile pic URL
+  // };
   // useEffect(() => {
   //   checkAuth();
   // }, [checkAuth]);

@@ -16,7 +16,7 @@ const Home = () => {
     setUserData(dataResponse.data[0]);
   };
   useEffect(() => {
-    const user_id = localStorage.getItem("user_id");
+    const user_id = localStorage.getItem("userId");
     fetchData(user_id);
   }, []);
 

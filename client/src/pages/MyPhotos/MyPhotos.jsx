@@ -16,7 +16,7 @@ const MyPhotos = () => {
   const [userData, setUserData] = useState([]);
   const [images, setImages] = useState([]);
   const fileInputRef = useRef(null);
-  const user_id = localStorage.getItem("user_id");
+  const user_id = localStorage.getItem("userId");
   const navigateTo = useNavigate();
   const deleted = () => {
     fetchData();

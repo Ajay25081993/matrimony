@@ -219,7 +219,7 @@ const MyProfile = () => {
   }, []);
 
   useEffect(() => {
-    const user_id = localStorage.getItem("user_id");
+    const user_id = localStorage.getItem("userId");
     const fetchData = async (user_id) => {
       try {
         const dataResponse = await axiosInstance.get(

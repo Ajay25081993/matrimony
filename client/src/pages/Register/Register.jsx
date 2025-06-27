@@ -68,8 +68,8 @@ const Register = ({ showRegister, setShowRegister }) => {
     };
 
     setUserData(updatedUserData);
-    localStorage.setItem("gender",updateGender)
-    navigateTo("/profile-creation/step/1")
+    localStorage.setItem("gender", updateGender);
+    navigateTo("/profile-creation/step/1");
 
     try {
       const response = await axiosInstance.post(
@@ -98,8 +98,11 @@ const Register = ({ showRegister, setShowRegister }) => {
         //     navigateTo("/profile-creation/step/1");
         //   },
         // });
-        showSuccessToast(response.message,navigateTo,"/profile-creation/step/1")
-
+        showSuccessToast(
+          response.message,
+          navigateTo,
+          "/profile-creation/step/1"
+        );
       } else {
         toast.success(response.message, {
           position: "top-center",

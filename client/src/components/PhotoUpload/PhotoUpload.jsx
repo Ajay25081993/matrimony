@@ -44,9 +44,10 @@ const PhotoUpload = ({ gender, handleSubmit }) => {
       setIsUploading(true);
       setUploadProgress(0);
 
-      const photoData = await axiosInstance.post(
+      const photoData = await axiosInstance.put(
         API_URLS.ADD_PROFILE_PHOTO,
         formData,
+
         {
           headers: { "Content-Type": "multipart/form-data" },
           onUploadProgress: (progressEvent) => {
@@ -57,7 +58,8 @@ const PhotoUpload = ({ gender, handleSubmit }) => {
           },
         }
       );
-
+      console.log(photoData.data);
+      
       if (photoData.data.length) {
         showSuccessToast(photoData.message, navigateTo);
         handleSubmit();

@@ -1,6 +1,6 @@
 import closeUp from "../../assets/closeUp.jpg";
 import closeUpBoy from "../../assets/closeUpBoy.jpg";
-import halfBoy from "../../assets/HalfBoy.jpg";
+import halfBoy from "../../assets/halfboy.jpg";
 import closeUpgirl from "../../assets/closeUpgirl.jpg";
 import fullGirl from "../../assets/fullGirl.jpg";
 import fullBoy from "../../assets/StandingMan.jpg";

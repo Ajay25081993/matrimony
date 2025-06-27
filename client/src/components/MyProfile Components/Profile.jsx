@@ -9,7 +9,7 @@ const Profile = () => {
   const [userInfo, setUserInfo] = useState([]);
   const [userData, setUserData] = useState([]);
   useEffect(() => {
-    const user_id = localStorage.getItem("user_id");
+    const user_id = localStorage.getItem("userId");
 
     const fetchData = async (user_id) => {
       try {
@@ -33,19 +33,19 @@ const Profile = () => {
   const goPreviewPage = () => {
     navigate("/profile-preview");
   };
+console.log(userInfo);
 
   return (
     <div className="profilePhotoComponent">
       <div className=" flex flex-col items-center space-y-1 bg-gray-200 h-53 rounded-t-xl rounded-b-xl">
-        
         <div className="h-45 w-40  transition-all duration-300 ease-in-out overflow-hidden rounded-t-md relative">
           <img
-          src={userData.profilePic}
-          alt=""
-          className="object-cover w-full "
-        />
+            src={userData.profilePic}
+            alt=""
+            className="object-cover w-full "
+          />
         </div>
-        
+
         <Link
           to="/my-photos"
           className="text-blue-500 hover:underline cursor-pointer"

@@ -56,11 +56,14 @@ const UserProfile = () => {
               className="bg-purple-100 px-2 rounded-full py-1 text-sm cursor-pointer"
             >
               {shortlist ? (
-                <i class="ri-heart-add-fill text-purple-500"></i>
+                <>
+                  <i class="ri-heart-add-fill text-purple-500"></i> Shortlisted
+                </>
               ) : (
-                <i class="ri-heart-add-line"></i>
-              )}{" "}
-              Shortlist
+                <>
+                  <i class="ri-heart-add-line"></i> Shortlist
+                </>
+              )}
             </div>
             <div
               onClick={() => setOpenMenu((prev) => !prev)}
@@ -130,7 +133,7 @@ const UserProfile = () => {
       </div>
       <div className="w-4xl border-1 border-gray-300 rounded-xl p-5 space-y-4">
         {/* Personal Information */}
-        <div className="flex items-center  gap-2 bg-sky-100 rounded-md px-3 py-2">
+        <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
           <img src={user} alt="" className="w-10" />
           <p className="text-lg font-semibold">Personal Information</p>
         </div>
@@ -154,8 +157,7 @@ const UserProfile = () => {
             <div>Education</div>
             <div>Occupation</div>
             <div>Works At</div>
-          </div>npm run dev
-          
+          </div>
 
           <div className="font-semibold space-y-4">
             <div>: {calculateAge(userData.dob)} Years</div>
@@ -216,7 +218,7 @@ const UserProfile = () => {
           </div>
         </div>
         {/* Family Information */}
-        <div className="flex items-center  gap-2 bg-sky-100 rounded-md px-3 py-2">
+        <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
           <img src={family} alt="" className="w-10" />
           <p className="text-lg font-semibold">Family Information</p>
         </div>
@@ -239,7 +241,7 @@ const UserProfile = () => {
           </div>
         </div>
         {/* Contact Information */}
-        <div className="flex items-center  gap-2 bg-sky-100 rounded-md px-3 py-2">
+        <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
           <img src={phone} alt="" className="w-10" />
           <p className="text-lg font-semibold">Contact Information</p>
         </div>
@@ -262,7 +264,7 @@ const UserProfile = () => {
           </div>
         </div>
         {/* About Myself */}
-        <div className="flex items-center  gap-2 bg-sky-100 rounded-md px-3 py-2">
+        <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
           <img src={user} alt="" className="w-10" />
           <p className="text-lg font-semibold">About Myself</p>
         </div>
@@ -273,7 +275,7 @@ const UserProfile = () => {
           <p>{userInfo.aboutMe}</p>
         </div>
         {/* Lifestyle */}
-        <div className="flex items-center  gap-2 bg-sky-100 rounded-md px-3 py-2">
+        <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
           <img src={lifestyle} alt="" className="w-10" />
           <p className="text-lg font-semibold">Lifestyle</p>
         </div>
@@ -289,12 +291,34 @@ const UserProfile = () => {
         </div>
         {/* Partner Preferences */}
         {/* Basic Preferences */}
-        <div className="flex items-center  gap-2 bg-sky-100 rounded-md px-3 py-2">
+        <div className=" w-full text-lg font-semibold flex justify-center gap-4 p-6">
+          <i class="ri-hearts-fill text-pink-300 -rotate-16"></i> Her Partner
+          Preferences <i class="ri-hearts-fill text-pink-300 rotate-16"></i>
+        </div>
+
+        <div className="flex justify-center items-center flex-col">
+          <div className="bg-gradient-to-b from-purple-300 via-purple-200  to-white relative w-xl p-3 flex border-1 border-b-violet-300  justify-between border-violet-500 rounded-xl">
+            <div className="w-20 h-20 overflow-hidden rounded-lg">
+              <img src={boyAvatar} alt="" />
+            </div>
+            <div className="flex justify-center items-center text-lg font-semibold">
+              You match 19/19 of her preferences
+            </div>
+            <div className="w-20 h-20 overflow-hidden rounded-lg">
+              <img src={boyAvatar} alt="" />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center  gap-2 bg-purple-100  rounded-md px-3 py-2">
           <p className="text-lg font-semibold">Basic Preferences</p>
         </div>
-        <div className="flex gap-10 px-4">
+        <div className="flex gap-20 px-40">
           <div className="font-light space-y-4">
-            <div>Preferred Bride's Age</div>
+            <div>
+              Preferred{" "}
+              {userData.gender === "Male" ? "Bride's Age" : "Groom's Age"}{" "}
+            </div>
             <div>Preferred Height</div>
             <div>Preferred Marital Status</div>
             <div>Preferred Mother Tongue</div>
@@ -304,39 +328,80 @@ const UserProfile = () => {
             <div>Preferred Drinking Habits</div>
           </div>
           <div className="font-semibold space-y-4">
-            <div>: 18-22 yrs</div>
-            <div>: 4'8" - 5'8"</div>
-            <div>: Never Married</div>
-            <div>: Bengali</div>
-            <div>: Normal </div>
-            <div>: Doesn't Matter</div>
-            <div>: Doesn't Matter</div>
-            <div>: Doesn't Matter</div>
+            <div> 18-22 yrs</div>
+            <div> 4'8" - 5'8"</div>
+            <div> Never Married</div>
+            <div> Bengali</div>
+            <div> Normal </div>
+            <div> Doesn't Matter</div>
+            <div> Doesn't Matter</div>
+            <div> Doesn't Matter</div>
+          </div>
+
+          <div className="space-y-3 text-2xl flex flex-col">
+            <div className="h-7 flex items-center">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
+            <div className="flex items-center h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
           </div>
         </div>
         {/* Religious Preferences */}
-        <div className="flex items-center  gap-2 bg-sky-100 rounded-md px-3 py-2">
+        <div className="flex items-center  gap-2 bg-purple-100  rounded-md px-3 py-2">
           <p className="text-lg font-semibold">Religious Preferences</p>
         </div>
-        <div className="flex gap-15 px-4">
+        <div className="flex gap-20 px-40">
           <div className="font-light space-y-4">
             <div>Preferred Religion</div>
             <div>Preferred Caste</div>
             <div>Preferred Star</div>
             <div>Preferred Dosham</div>
           </div>
-          <div className="font-semibold space-y-4">
-            <div>: Hindu</div>
-            <div>: Mahishya</div>
-            <div>: Any</div>
-            <div>: Doesn't Matter</div>
+          <div className="font-semibold ml-12 space-y-4">
+            <div>Hindu</div>
+            <div>Mahishya</div>
+            <div>Any</div>
+            <div>Doesn't Matter</div>
+          </div>
+          <div className="space-y-3 text-2xl flex flex-col">
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
           </div>
         </div>
         {/* Professional Preferences */}
-        <div className="flex items-center  gap-2 bg-sky-100 rounded-md px-3 py-2">
+        <div className="flex items-center  gap-2 bg-purple-100  rounded-md px-3 py-2">
           <p className="text-lg font-semibold">Professional Preferences</p>
         </div>
-        <div className="flex gap-10 px-4">
+        <div className="flex gap-16 px-40">
           <div className="font-light space-y-4">
             <div>Preferred Education</div>
             <div>Preferred Employment Type</div>
@@ -344,35 +409,65 @@ const UserProfile = () => {
             <div>Preferred Annual Income</div>
           </div>
           <div className="font-semibold space-y-4">
-            <div>
-              : Bachelors - Engineering / Computers / Others,Masters - Engin...
-              more
+            <div>Bachelors more...</div>
+            <div>Any</div>
+            <div>Any</div>
+            <div>Any</div>
+          </div>
+          <div className="space-y-3 text-2xl flex flex-col">
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
             </div>
-            <div>: Any</div>
-            <div>: Any</div>
-            <div>: Any</div>
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center  gap-2 bg-sky-100 rounded-md px-3 py-2">
+        <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
           <p className="text-lg font-semibold">Location Preferences</p>
         </div>
-        <div className="flex gap-15 px-4">
+        <div className="flex gap-23 px-40">
           <div className="font-light space-y-4">
             <div>Preferred Country</div>
             <div>Preferred Residing State</div>
             <div>Preferred Residing City</div>
           </div>
           <div className="font-semibold space-y-4">
-            <div>: India</div>
-            <div>: West Bengal</div>
-            <div>: Any</div>
+            <div>India</div>
+            <div>West Bengal</div>
+            <div>Any</div>
+          </div>
+          <div className="space-y-3 text-2xl flex flex-col">
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
+            <div className="flex items-center  h-7">
+              <i className="ri-checkbox-circle-line text-green-300"></i>
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center  gap-2 bg-sky-100 rounded-md px-3 py-2">
-          <p className="text-lg font-semibold">Both of you like</p>
+        <div className="flex items-center  bg-purple-100 rounded-md px-3 py-2">
+          <i class="ri-hearts-fill text-pink-300 text-xl -rotate-30"></i>{" "}
+          <i class="ri-hearts-fill text-pink-300 text-xl rotate-30 mr-2"></i>{" "}
+          <p className="text-lg font-semibold"> Both of you like</p>
         </div>
+
+        <div className="flex gap-5 px-4">
+          <div>Hobby</div>
+          <div>: Cooking</div>
+        </div>
+
         <div className="flex items-center justify-center  px-3 py-4">
           <img src={design} className="w-500" alt="" />
         </div>
@@ -386,21 +481,20 @@ const UserProfile = () => {
           </div>
           <div className="flex gap-4">
             <div className="bg-amber-300 w-40 h-40 rounded-lg overflow-hidden relative">
-            <img src={boyAvatar} className="object-cover w-full" alt="" />
-            <div className="absolute bottom-0 left-0 right-0 text-sm text-white font-semibold bg-[#0000002d]  px-2">
-              <p >Rudradeb Maji</p>
-              <p>22 Yrs, 5'3"</p>
+              <img src={boyAvatar} className="object-cover w-full" alt="" />
+              <div className="absolute bottom-0 left-0 right-0 text-sm text-white font-semibold bg-[#0000002d]  px-2">
+                <p>Rudradeb Maji</p>
+                <p>22 Yrs, 5'3"</p>
+              </div>
+            </div>
+            <div className="bg-amber-300 w-40 h-40 rounded-lg overflow-hidden relative">
+              <img src={boyAvatar} className="object-cover w-full" alt="" />
+              <div className="absolute bottom-0 left-0 right-0 text-sm text-white font-semibold bg-[#0000002d]  px-2">
+                <p>Rudradeb Maji</p>
+                <p>22 Yrs, 5'3"</p>
+              </div>
             </div>
           </div>
-          <div className="bg-amber-300 w-40 h-40 rounded-lg overflow-hidden relative">
-            <img src={boyAvatar} className="object-cover w-full" alt="" />
-            <div className="absolute bottom-0 left-0 right-0 text-sm text-white font-semibold bg-[#0000002d]  px-2">
-              <p >Rudradeb Maji</p>
-              <p>22 Yrs, 5'3"</p>
-            </div>
-          </div>
-          </div>
-          
         </div>
       </div>
     </div>

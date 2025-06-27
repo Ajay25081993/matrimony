@@ -27,13 +27,13 @@ export const activity = [
     subtitle: " Matches you have shortlisted",
   },
   {
-    url: "",
+    url: "/matches/viewed-you",
     icon: "ri-eye-line",
     title: "Viewed you",
     subtitle: "Matches who have viewed your profile",
   },
   {
-    url: "",
+    url: "/matches/shortlisted-you",
     icon: "ri-user-star-line",
     title: "Shortlisted you",
     subtitle: "Matches who have shortlisted your profile",

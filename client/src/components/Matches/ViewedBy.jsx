@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import boyAvatar from "../../assets/Dp.png";
-
-const MatchedPerson = () => {
+const ViewedBy = () => {
   const [shortlist, setShortlist] = useState(false);
   const navigateTo = useNavigate();
   const shorlistProfile = () => {
@@ -12,33 +11,7 @@ const MatchedPerson = () => {
     navigateTo("/matches/all-matches/1");
   };
   return (
-    <div className="w-2xl ">
-      <p className="mb-2">
-        {" "}
-        For 90 matches based on your{" "}
-        <Link
-          to="/partner-preferences"
-          className="text-orange-400 underline"
-          href=""
-        >
-          Preferences
-        </Link>{" "}
-      </p>
-      <div className="flex flex-wrap gap-2">
-        <div className="p-1 border-1 text-sm  border-gray-300 rounded-4xl ">
-          Profiles with photo
-        </div>
-        <div className="p-1 border-1 text-sm  border-gray-300 rounded-4xl ">
-          Profile with horoscope
-        </div>
-        <div className="p-1 border-1  border-gray-300  text-sm rounded-4xl ">
-          Location
-        </div>
-        <div className="p-1 border-1  border-gray-300  text-sm rounded-4xl ">
-          Mutual matches
-        </div>
-      </div>
-
+    <div className="w-2xl">
       <div className="mt-5  border-1   border-gray-300 rounded-lg p-4 flex w-full gap-6">
         <div className="relative w-60 h-55 overflow-hidden rounded-xl border-1 cursor-pointer ">
           <img
@@ -98,4 +71,4 @@ const MatchedPerson = () => {
   );
 };
 
-export default MatchedPerson;
+export default ViewedBy;

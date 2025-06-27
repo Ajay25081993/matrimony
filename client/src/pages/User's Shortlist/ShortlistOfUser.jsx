@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Options from "../../components/Matches/Options";
-import MatchedPerson from "../../components/Matches/MatchedPerson";
-import Header from "../../components/Header/Header4";
-import axiosInstance from "../../lib/axios";
 import { API_URLS } from "../../constants/apiUrls";
-import PhotoMatchedPerson from "../../components/Matches/PhotoMatchedPerson";
-import ProfileWithHoroscope from "../../components/Matches/ProfileWithHoroscope";
+import axiosInstance from "../../lib/axios";
 import UserShortListed from "../../components/Matches/UserShortListed";
+import Header from "../../components/Header/Header4";
+import Options from "../../components/Matches/Options";
 
-const Matches = ({ steps }) => {
+const ShortlistOfUser = () => {
   const [userData, setUserData] = useState({});
-  const allStep = [
-    { component: MatchedPerson, path: "all-matches" },
-    { component: PhotoMatchedPerson, path: "photo-matches" },
-    { component: ProfileWithHoroscope, path: "profiles-with-horoscope" },
-  ];
 
   const user_id = localStorage.getItem("user_id");
 
@@ -32,20 +24,15 @@ const Matches = ({ steps }) => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const CurrentComponent = allStep.find(
-    (stepObj) => stepObj.path === steps
-  )?.component;
-
   return (
     <div className="w-full h-screen">
       <Header profilePic={userData.profilePic} userData={userData} />
       <div className="flex justify-center gap-5 py-30">
         <Options />
-        {CurrentComponent ? <CurrentComponent /> : null}
+        <UserShortListed />
       </div>
     </div>
   );
 };
 
-export default Matches;
+export default ShortlistOfUser;
