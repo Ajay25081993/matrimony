@@ -8,11 +8,11 @@ import Carousel from "../Carousel/Carousel";
 const SuccessStory = () => {
   // className="w-full flex  items-center justify-center "
   return (
-    <div className="flex flex-col items-center justify-center py-20">
-      <p className="text-red-500 mb-20 text-4xl text-center">
+    <div className="flex flex-col items-center justify-center lg:py-20 py-10">
+      <p className="text-red-500 lg:mb-20 mb-10 lg:text-4xl text-3xl text-center">
         Matrimony Service with Millions of Success Stories
       </p>
-      <Carousel />
+      <Carousel slideToShow={3} slideToScroll={3}/>
     </div>
   );
 };

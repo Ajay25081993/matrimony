@@ -3,7 +3,7 @@ import { allFields } from "./field";
 
 const Sidebar = ({ onOptionClick }) => {
   return (
-    <div className="rounded-sm w-80 border-1 fixed top-37 left-40  bg-[#a261fc] p-8 text-white h-150">
+    <div className="rounded-sm w-65 border-1 fixed top-37 left-40  bg-[#a261fc] p-6 text-white h-150">
       <div className="space-y-10">
         <div className="text-sm font-semibold mb-2 flex gap-2 items-center">
           <i className="ri-hearts-line text-2xl"></i>
@@ -14,7 +14,7 @@ const Sidebar = ({ onOptionClick }) => {
           {allFields.map((field, idx) => (
             <div
               key={idx}
-              className="hover:text-blue-400 cursor-pointer scroll-mt-[120px]"
+              className="hover:text-violet-900 cursor-pointer scroll-mt-[120px]"
               onClick={() => onOptionClick(field.mainHeading)}
             >
               {field.mainHeading.replace(" Preferences", "")}

@@ -1,6 +1,6 @@
 import express from "express";
 import { successResponse, errorResponse } from "../helper/responseHelper.js";
-import { Like, User } from "../models/Schemas.js";
+import { Info, Like, User } from "../models/Schemas.js";
 import handleValidationErrors from "../middleware/validateRequest.js";
 import {
   addLikeValidation,
@@ -19,7 +19,6 @@ likeRouter.post(
   async (req, res) => {
     try {
       const { liker_id, liked_id } = req.body;
-
       const like = await Like.create({ liker_id, liked_id });
       successResponse(res, "Like added successfully", [like], 200);
     } catch (error) {
@@ -36,13 +35,33 @@ likeRouter.get(
   handleValidationErrors,
   async (req, res) => {
     try {
+      console.log(req.params.liker_id);
+
       const likes = await Like.findAll({
         where: { liker_id: req.params.liker_id },
         include: [
           {
             model: User,
             as: "likedUser",
-            attributes: ["id", "username", "email"],
+            attributes: [
+              "id",
+              "firstName",
+              "lastName",
+              "profilePic",
+              "email",
+              "age",
+            ],
+          },
+          {
+            model: Info,
+            as: "likedUserInfo",
+            attributes: [
+              "height",
+              "subCommunity",
+              "qualification",
+              "workAs",
+              "city",
+            ],
           },
         ],
       });
@@ -55,7 +74,7 @@ likeRouter.get(
   }
 );
 
-// Get Users Who Liked a User
+// Get Users Who Liked this User
 likeRouter.get(
   "/liked-by/:liked_id",
   getLikedByValidation,
@@ -64,11 +83,29 @@ likeRouter.get(
     try {
       const likes = await Like.findAll({
         where: { liked_id: req.params.liked_id },
-        include: [
+         include: [
           {
             model: User,
             as: "likerUser",
-            attributes: ["id", "username", "email"],
+            attributes: [
+              "id",
+              "firstName",
+              "lastName",
+              "profilePic",
+              "email",
+              "age",
+            ],
+          },
+          {
+            model: Info,
+            as: "likerUserInfo",
+            attributes: [
+              "height",
+              "subCommunity",
+              "qualification",
+              "workAs",
+              "city",
+            ],
           },
         ],
       });
@@ -88,12 +125,12 @@ likeRouter.delete(
   handleValidationErrors,
   async (req, res) => {
     try {
-      const like = await Like.findOne({ where: { id: req.params.id } });
+      const like = await Like.findOne({ where: { liked_id: req.params.id } });
 
       if (!like) return successResponse(res, "Like not found", [], 200);
 
       await like.destroy();
-      successResponse(res, "Like deleted successfully", [], 200);
+      successResponse(res, "Like deleted successfully", ["deleted"], 200);
     } catch (error) {
       console.error(error);
       errorResponse(res, "Server error", [], 500);

@@ -1,72 +1,214 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import boyAvatar from "../../assets/Dp.png";
-const UserShortListed = () => {
-  const [shortlist, setShortlist] = useState(true);
+import React, { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axiosInstance from "../../lib/axios";
+import { API_URLS } from "../../constants/apiUrls";
+import noMatches from "../../assets/icon-no-matches.svg";
+import { customDate } from "./customDate";
+
+const UserShortListed = ({ loggedInUserData }) => {
   const navigateTo = useNavigate();
-  const shorlistProfile = () => {
-    setShortlist((prev) => !prev);
+  const [allLikedUser, setAllLikedUser] = useState();
+  const [allViews, setAllViews] = useState();
+  const [allInterests, setAllInterests] = useState();
+  const sendInterest = async (id) => {
+    try {
+      const interestResponse = await axiosInstance.post(
+        API_URLS.SEND_INTEREST,
+        {
+          sender_id: loggedInUserData.id,
+          receiver_id: id,
+        }
+      );
+      console.log(interestResponse);
+
+      fetchInterests(loggedInUserData);
+    } catch (error) {
+      console.log(error);
+    }
   };
-  const openProfile = () => {
-    navigateTo("/matches/all-matches/1");
+  const fetchInterests = async (user) => {
+    try {
+      const allInterestResponse = await axiosInstance.get(
+        `${API_URLS.GET_INTERESTS}/${user.id}`
+      );
+      setAllInterests(allInterestResponse.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
+  const fetchLikes = async (user) => {
+    try {
+      const response = await axiosInstance.get(
+        `${API_URLS.GET_LIKED_USER}/${user.id}`
+      );
+      console.log(response.data);
+
+      setAllLikedUser(response.data);
+    } catch (err) {
+      console.error("Failed to fetch likes:", err);
+    }
+  };
+  const fetchViews = async (user) => {
+    try {
+      const allViewResponse = await axiosInstance.get(
+        `${API_URLS.ALL_VISITED_USER}/${user.id}`
+      );
+      console.log(allViewResponse.data);
+
+      setAllViews(allViewResponse.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const dislikeUser = async (userData) => {
+    try {
+      await axiosInstance.delete(`${API_URLS.REMOVE_LIKE}/${userData.id}`);
+
+      fetchLikes(loggedInUserData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const viewUser = async (id) => {
+    try {
+      let viewed = false;
+      allViews.some((view) => {
+        viewed = view.visited_id === id;
+      });
+      if (!viewed) {
+        const viewResponse = await axiosInstance.post(API_URLS.VISIT_USER, {
+          visiter_id: loggedInUserData.id,
+          visited_id: id,
+        });
+        console.log(viewResponse);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchLikes(loggedInUserData);
+    fetchViews(loggedInUserData);
+    fetchInterests(loggedInUserData);
+  }, [loggedInUserData]);
+  const openProfile = (id) => {
+    navigateTo(`/matches/liked-by-you/${id}`);
+  };
+
   return (
     <div className="w-2xl">
-      <div className="mt-5  border-1   border-gray-300 rounded-lg p-4 flex w-full gap-6">
-        <div className="relative w-60 h-55 overflow-hidden rounded-xl border-1 cursor-pointer ">
-          <img
-            onClick={() => openProfile()}
-            className="object-cover w-full"
-            src={boyAvatar}
-            alt=""
-          />
-          <div
-            onClick={() => shorlistProfile()}
-            className="absolute right-0 px-1  rounded-tr-xl rounded-l-xs top-0 bg-[#000000] text-sm text-white"
-          >
-            {shortlist ? (
-              <>
-                <i class="ri-heart-add-fill text-purple-500"></i> Shortlisted
-              </>
-            ) : (
-              <>
-                <i class="ri-heart-add-line"></i> Shortlist
-              </>
-            )}
+      {allLikedUser?.length > 0 ? (
+        <div>
+          <p className="mb-2 text-2xl font-semibold">
+            {allLikedUser?.length}{" "}
+            {allLikedUser?.length > 1 ? " Profiles" : "Profile"} you liked{" "}
+          </p>
+          {allLikedUser?.map((data, index) => {
+            return (
+              <div
+                key={index}
+                className="mt-5 border-1 border-gray-300 rounded-lg p-4 flex w-full gap-6"
+              >
+                <div className="relative w-60 h-55 overflow-hidden rounded-xl border-1 cursor-pointer ">
+                  <img
+                    onClick={() => {
+                      openProfile(data.likedUser.id);
+                      viewUser(data.likedUser.id);
+                    }}
+                    className="object-cover w-full"
+                    src={data.likedUser.profilePic}
+                    alt=""
+                  />
+                  <div className="absolute right-0 rounded-tr-xl rounded-l-xs top-0 bg-[#000000] text-sm font-semibold text-white">
+                    <div
+                      onClick={() => dislikeUser(data.likedUser)}
+                      className="bg-black w-full px-1 space-x-1 text-[#c419be]"
+                    >
+                      <i class="ri-heart-add-fill  font-light"></i>{" "}
+                      <span className="">Liked</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <div
+                    onClick={() => {
+                      openProfile(data.likedUser.id);
+                      viewUser(data.likedUser.id);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <p>You've liked her on {customDate(data.createdAt)}</p>
+                    <p className="font-bold">
+                      {data.likedUser.firstName} {data.likedUser.lastName}
+                    </p>{" "}
+                    <p className="text-gray-500">Last seen Few hours ago </p>
+                    <div className="flex space-x-2 flex-wrap">
+                      <div>{data.likedUser.age} yrs</div>
+                      <span className="text-[#d612cf]">●</span>
+                      <div> {data.likedUserInfo.height}</div>
+                      <span className="text-[#d612cf]">●</span>
+                      <div>{data.likedUserInfo.subCommunity}</div>
+                      <span className="text-[#d612cf]">●</span>
+                      <div>{data.likedUserInfo.qualification}</div>
+                      <span className="text-[#d612cf]">●</span>
+                      <div>{data.likedUserInfo.workAs}</div>
+                      <span className="text-[#d612cf]">●</span>
+                      <div>{data.likedUserInfo.city}</div>
+                    </div>
+                  </div>
+
+                  {allInterests?.some(
+                    (interset) => interset.receiver_id === data.likedUser.id
+                  ) ? (
+                    <div className="mt-20 flex justify-center">
+                      <button
+                        onClick={() => {
+                          //
+                        }}
+                        className=" px-6 rounded-full text-white hover:bg-[#81007c] bg-[#9f139a] cursor-pointer flex gap-2 items-center"
+                      >
+                        <i className="ri-message-2-line text-xl mt-1 text-white"></i>
+                        <span>Send Message</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="mt-20 flex gap-2">
+                      <button className="border-1 px-3 text-gray-700 border-gray-300 rounded-full cursor-pointer flex gap-2 items-center">
+                        <i className="ri-close-line text-2xl mt-1 text-gray-500"></i>
+                        <span>Don't Show</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          sendInterest(data.likedUser.id);
+                        }}
+                        className=" px-6 rounded-full text-white hover:bg-[#81007c] bg-[#9f139a] cursor-pointer flex gap-2 items-center"
+                      >
+                        <i className="ri-heart-line text-2xl mt-1 text-white"></i>
+                        <span>Send interset</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="pt-20 space-y-3 w-full flex items-center justify-center flex-col">
+          <img src={noMatches} alt="" />
+          <p>You have liked no profile yet</p>
+          <div className="flex justify-center">
+            <Link to={"/matches/all-matches"}>
+              {" "}
+              <button className="cursor-pointer font-semibold px-5 py-1  border bg-purple-200 border-purple-500 text-purple-700 hover:bg-purple-300 rounded-full">
+                View All{" "}
+                <i class="text-lg font-semibold ri-arrow-right-s-line"></i>
+              </button>
+            </Link>
           </div>
         </div>
-
-        <div className="space-y-1">
-          <div onClick={() => openProfile()} className="cursor-pointer">
-            <p className="font-bold">sulogna das</p>{" "}
-            <p className="text-gray-500">Last seen Few hours ago </p>
-            <div className="flex space-x-2 flex-wrap">
-              <div>18yrs</div>
-              <div className="text-purple-400">●</div>
-              <div> 5'3"</div>
-              <div className="text-purple-400">●</div>
-              <div>Mahisya</div>
-              <div className="text-purple-400">●</div>
-              <div>LL.B</div>
-              <div className="text-purple-400">●</div>
-              <div>Not Working</div>
-              <div className="text-purple-400">●</div>
-              <div>kolkata</div>
-            </div>
-          </div>
-
-          <div className="mt-20 flex gap-2">
-            <button className="border-1 px-3 text-gray-700 border-gray-300 rounded-full cursor-pointer flex gap-2 items-center">
-              <i className="ri-close-line text-2xl mt-1 text-gray-500"></i>
-              <span>Don't Show</span>
-            </button>
-            <button className=" px-6 rounded-full text-white bg-violet-500 cursor-pointer flex gap-2 items-center">
-              <i className="ri-heart-line text-2xl mt-1 text-white"></i>
-              <span>Send interset</span>
-            </button>
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

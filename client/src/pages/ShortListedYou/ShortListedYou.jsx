@@ -10,7 +10,7 @@ import ShortListedByOther from "../../components/Matches/ShortListedByOther";
 const ShortListedYou = () => {
   const [userData, setUserData] = useState({});
 
-  const user_id = localStorage.getItem("user_id");
+  const user_id = localStorage.getItem("userId");
 
   const fetchData = async () => {
     try {

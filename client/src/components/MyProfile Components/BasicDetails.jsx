@@ -18,7 +18,7 @@ const BasicDetails = ({ userData, userInfo }) => {
         bodyType: userInfo.bodyType || "",
         drinkingHabit: userInfo.drinkingHabit || "",
         smokingHabit: userInfo.smokingHabit || "",
-        physicalStatus: "",
+        physicalStatus: userInfo.physicalStatus||"",
       });
     }
   }, [userInfo]);

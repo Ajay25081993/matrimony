@@ -67,7 +67,7 @@ const Info = sequelize.define(
     workAs: Sequelize.STRING(30),
     company: Sequelize.STRING(50),
     income: Sequelize.STRING(30),
-    languageKnown: Sequelize.STRING(30),
+    languageKnown: Sequelize.TEXT,
     city: Sequelize.STRING(15),
     liveWithFamily: Sequelize.STRING(15),
     maritalStatus: Sequelize.STRING(15),
@@ -81,8 +81,8 @@ const Info = sequelize.define(
     subCommunity: Sequelize.STRING(15),
     casteMatters: Sequelize.STRING(15),
     aboutMe: Sequelize.STRING(4000),
-    mother: Sequelize.STRING(10),
-    father: Sequelize.STRING(10),
+    mother: Sequelize.STRING(15),
+    father: Sequelize.STRING(15),
     noOfSister: Sequelize.STRING(10),
     noOfBrother: Sequelize.STRING(10),
     address_modified: { type: Sequelize.BOOLEAN, defaultValue: false },
@@ -93,6 +93,44 @@ const Info = sequelize.define(
   },
   {
     tableName: "infos",
+    underscored: true,
+  }
+);
+const PartnerPreferences = sequelize.define(
+  "PartnerPreferences",
+  {
+    id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+    user_id: { type: Sequelize.INTEGER, allowNull: false },
+    age_from: Sequelize.STRING(4),
+    age_to: Sequelize.STRING(4),
+    height_from: Sequelize.STRING(10),
+    height_to: Sequelize.STRING(10),
+    marital_status: Sequelize.STRING(20),
+    mother_tongue: Sequelize.STRING(30),
+    physical_status: Sequelize.STRING(30),
+    eating_habits: Sequelize.STRING(30),
+    drinking_habits: Sequelize.STRING(30),
+    smoking_habits: Sequelize.STRING(30),
+    religion: Sequelize.STRING(30),
+    caste: Sequelize.STRING(30),
+    dosh: Sequelize.TEXT, // JSON stringified array
+    star: Sequelize.TEXT,
+    rashi: Sequelize.TEXT,
+    education: Sequelize.TEXT,
+    work_in: Sequelize.TEXT,
+    work_as: Sequelize.TEXT,
+    income: Sequelize.STRING(30),
+    residing_states: Sequelize.TEXT,
+    residing_cities: Sequelize.TEXT,
+    about_partner: Sequelize.TEXT,
+
+    is_deleted: {
+      type: Sequelize.TINYINT(1),
+      defaultValue: 0,
+    },
+  },
+  {
+    tableName: "partner_preferences",
     underscored: true,
   }
 );
@@ -227,7 +265,9 @@ const Message = sequelize.define(
     sender_id: { type: Sequelize.INTEGER, allowNull: false },
     receiver_id: { type: Sequelize.INTEGER, allowNull: false },
     message: { type: Sequelize.STRING(256), allowNull: false },
-    time: { type: Sequelize.DATE, allowNull: false },
+    image: { type: Sequelize.TEXT, allowNull: false },
+    seen: { type: Boolean, defaultValue: false },
+    time: { type: Sequelize.STRING(30), allowNull: false },
     is_deleted: {
       type: Sequelize.TINYINT(1),
       defaultValue: 0,
@@ -235,6 +275,21 @@ const Message = sequelize.define(
   },
   {
     tableName: "messages",
+    underscored: true,
+  }
+);
+const Contact = sequelize.define(
+  "Contact",
+  {
+    id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+    user_id: { type: Sequelize.INTEGER, allowNull: false },
+    is_deleted: {
+      type: Sequelize.TINYINT(1),
+      defaultValue: 0,
+    },
+  },
+  {
+    tableName: "contacts",
     underscored: true,
   }
 );
@@ -284,8 +339,9 @@ const Interest = sequelize.define(
   "Interest",
   {
     id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-    user_id: { type: Sequelize.INTEGER, allowNull: false },
-    tag: Sequelize.STRING(24),
+    sender_id: { type: Sequelize.INTEGER, allowNull: false },
+    receiver_id: { type: Sequelize.INTEGER, allowNull: false },
+    status: { type: Sequelize.STRING(15), allowNull: false },
     is_deleted: {
       type: Sequelize.TINYINT(1),
       defaultValue: 0,
@@ -296,9 +352,11 @@ const Interest = sequelize.define(
     underscored: true,
   }
 );
+
 const Connection = sequelize.define(
   "Connection",
   {
+    id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
     user_id: { type: Sequelize.INTEGER, allowNull: false },
     last_connection: Sequelize.DATE,
     is_deleted: {
@@ -312,20 +370,58 @@ const Connection = sequelize.define(
   }
 );
 
-User.hasOne(Info, { foreignKey: "user_id" });
+User.hasOne(Info, { foreignKey: "user_id", as: "Info" });
+
 User.hasMany(Like, { foreignKey: "liker_id" });
 Info.belongsTo(User, { as: "User", foreignKey: "user_id" });
+Interest.belongsTo(User, { foreignKey: "sender_id", as: "sender" });
+Interest.belongsTo(User, {
+  foreignKey: "receiver_id",
+  as: "receiver",
+}); 
 
 // In models/Schemas.js or corresponding model files
 Like.belongsTo(User, { foreignKey: "liked_id", as: "likedUser" });
+Like.belongsTo(User, { foreignKey: "liker_id", as: "likerUser" });
+Like.belongsTo(Info, {
+  foreignKey: "liked_id",
+  targetKey: "user_id", // this is the crucial part!
+  as: "likedUserInfo",
+});
+Like.belongsTo(Info, {
+  foreignKey: "liked_id",
+  targetKey: "user_id", // this is the crucial part!
+  as: "likerUserInfo",
+});
+Connection.belongsTo(User, {
+  foreignKey: 'user_id',
+  as: 'connectedUser'
+});
 Dislike.belongsTo(User, { foreignKey: "disliked_id", as: "dislikedUser" });
 Block.belongsTo(User, { foreignKey: "blocked_id", as: "blockedUser" });
 Report.belongsTo(User, { foreignKey: "reported_id", as: "reportedUser" });
 Connection.belongsTo(User, { foreignKey: "user_id", as: "user" });
 Visit.belongsTo(User, { foreignKey: "visited_id", as: "visited" });
+Visit.belongsTo(User, { foreignKey: "visiter_id", as: "visiter" });
+Visit.belongsTo(Info, {
+  foreignKey: "visited_id",
+  targetKey: "user_id",
+  as: "visitedUserInfo",
+});
+Visit.belongsTo(Info, {
+  foreignKey: "visited_id",
+  targetKey: "user_id",
+  as: "visiterUserInfo",
+});
+Message.belongsTo(User, { foreignKey: "sender_id", as: "sender" });
+Message.belongsTo(User, { foreignKey: "receiver_id", as: "receiver" });
 Photo.belongsTo(User, { foreignKey: "user_id", as: "user" });
 User.hasOne(Photo, { foreignKey: "user_id", as: "photo" });
-
+PartnerPreferences.belongsTo(User, { foreignKey: "user_id", as: "user" });
+User.hasOne(PartnerPreferences, {
+  foreignKey: "user_id",
+  as: "partnerPreferences",
+});
 export {
   sequelize,
   User,
@@ -342,4 +438,5 @@ export {
   Notif,
   Interest,
   Connection,
+  PartnerPreferences,
 };

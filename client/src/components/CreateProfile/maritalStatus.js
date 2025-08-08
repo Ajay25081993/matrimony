@@ -4,5 +4,5 @@ export const maritalStatus = [
     "Widowed",
     "Divorced",
     "Awaiting Divorce",
-    "Annulled"
+    
 ]

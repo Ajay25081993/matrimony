@@ -8,70 +8,34 @@ import {
   conversationQueryValidation,
   messageIdParamValidation,
 } from "../validators/messageValidator.js";
+import {
+  getMessages,
+  getUsersForSidebar,
+  markMessageAsSeen,
+  sendMessage,
+} from "../controllers/message.controller.js";
+import cloudinary from "../lib/cloudinary.js";
 
 const messageRouter = express.Router();
 
 // Send a Message
 messageRouter.post(
-  "/send",
+  "/send/:receiver_id",
   sendMessageValidation,
   handleValidationErrors,
-  async (req, res) => {
-    try {
-      const { sender_id, receiver_id, message, time } = req.body;
-      const msg = await Message.create({
-        sender_id,
-        receiver_id,
-        message,
-        time: time || new Date(),
-      });
-      successResponse(res, "Message sent successfully", [msg], 200);
-    } catch (error) {
-      console.error(error);
-      errorResponse(res, "Server error", [], 500);
-    }
-  }
+  sendMessage
 );
 
 // Get Messages between two users (with pagination)
 messageRouter.get(
-  "/conversation",
+  "/conversation/:selectedUserId",
   conversationQueryValidation,
   handleValidationErrors,
-  async (req, res) => {
-    try {
-      const { user1_id, user2_id, page_no = 1, per_page = 20 } = req.query;
-      const offset = (page_no - 1) * per_page;
-
-      const messages = await Message.findAndCountAll({
-        where: {
-          [Op.or]: [
-            { sender_id: user1_id, receiver_id: user2_id },
-            { sender_id: user2_id, receiver_id: user1_id },
-          ],
-        },
-        limit: parseInt(per_page),
-        offset: parseInt(offset),
-        order: [["time", "DESC"]],
-      });
-
-      successResponse(
-        res,
-        "Conversation messages",
-        [
-          {
-            total: messages.count,
-            data: messages.rows,
-          },
-        ],
-        200
-      );
-    } catch (error) {
-      console.error(error);
-      errorResponse(res, "Server error", [], 500);
-    }
-  }
+  getMessages
 );
+messageRouter.get("/users", getUsersForSidebar);
+
+messageRouter.put("/mark/:id", markMessageAsSeen);
 
 // Delete a message by ID
 messageRouter.delete(

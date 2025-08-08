@@ -1,11 +1,11 @@
 import React from "react";
 import Logo from "../../assets/soulBandhan.png";
 
-const Header = ({ showLogin, setShowLogin }) => {
+const Header = ({ setShowLogin }) => {
   return (
-    <div className="w-full flex items-center justify-around py-5">
+    <div className="w-full flex items-center justify-between pr-8 text-xl lg:justify-around lg:text-lg">
       <div>
-        <img src={Logo} className="w-45" alt="" />
+        <img src={Logo} className="lg:w-45 w-40" alt="" />
       </div>
 
       <div className="flex items-center gap-3 text-white">

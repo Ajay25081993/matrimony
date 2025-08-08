@@ -10,18 +10,23 @@ import GenerateQR from "./components/GenerateQR";
 import QRScanner from "./components/QRScanner";
 
 const Landing = lazy(() => import("./pages/Landing"));
+const ViewedByYou = lazy(() => import("./pages/ViewedByYou/ViewedByYou"));
 const Viewed = lazy(() => import("./pages/Viewed/Viewed"));
 const ShortListedYou = lazy(() =>
   import("./pages/ShortListedYou/ShortListedYou")
 );
 const MyProfile = lazy(() => import("./pages/My Profile/MyProfile"));
 const More = lazy(() => import("./pages/More/More"));
+const Interest = lazy(() => import("./pages/Interests/Interest"));
 const Settings = lazy(() => import("./pages/Settings/Settings"));
+const NewlyJoin = lazy(() => import("./pages/NewlyJoin/NewlyJoin"));
+const NearByMatches = lazy(() => import("./pages/NearByMatches/NearBy"));
 const MyPhotos = lazy(() => import("./pages/MyPhotos/MyPhotos"));
 const PartnerPreferences = lazy(() =>
   import("./pages/PartnerPreferences/PartnerPreferences")
 );
 const Home = lazy(() => import("./pages/Home/Home"));
+const SearchUser = lazy(() => import("./pages/Search/SearchUser"));
 const Matches = lazy(() => import("./pages/Matches/Matches"));
 const UserProfilePage = lazy(() =>
   import("./pages/User's Profile/UserProfilePage")
@@ -42,11 +47,16 @@ const App = () => {
   // const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
   const componentsMap = {
     Home,
+    SearchUser,
+    Interest,
     Matches,
     UserProfilePage,
     ShortlistOfUser,
     Viewed,
     ShortListedYou,
+    ViewedByYou,
+    NewlyJoin,
+    NearByMatches,
     More,
     Settings,
     MyPhotos,
@@ -61,11 +71,26 @@ const App = () => {
   const stepsMap = {
     "/profile-creation/about-me": "about-me",
     "/profile-creation/family-details": "family-details",
+    "/profile-creation/partner-preferences": "partner-preferences",
     "/profile-creation/upload-photo": "upload-photo",
     "/matches/all-matches": "all-matches",
+    "/matches/shortlisted-by-you": "shortlisted-by-you",
+    "/matches/shortlisted-you": "shortlisted-you",
+    "/matches/viewed-you": "viewed-you",
+    "/matches/viewed-by-you": "viewed-by-you",
+    "/matches/newly-joined": "newly-joined",
+    "/matches/nearby-matches": "nearby-matches",
     "/matches/photo-matches": "photo-matches",
     "/matches/profiles-with-horoscope": "profiles-with-horoscope",
     "/matches/hobby-matches": "hobby-matches",
+    "/interests/received/all-interests": "/received/all-interests",
+    "/interests/received/pending-interests": "/received/pending-interests",
+    "/interests/received/accepted-interests": "/received/accepted-interests",
+    "/interests/received/declined-interests": "/received/declined-interests",
+    "/interests/sent/all-interests": "/sent/all-interests",
+    "/interests/sent/pending-interests": "/sent/pending-interests",
+    "/interests/sent/accepted-interests": "/sent/accepted-interests",
+    "/interests/sent/declined-interests": "/sent/declined-interests",
   };
   // const user = {
   //   name: "Rudra Deb",
@@ -101,7 +126,6 @@ const App = () => {
           {privateRoutes.map(({ path, component }) => {
             const Component = componentsMap[component];
             const step = stepsMap[path];
-
             return (
               <Route
                 key={path}

@@ -161,7 +161,7 @@ const Family = ({ formData, setFormData, handleSubmit }) => {
   };
 
   const onNext = () => {
-    navigateTo("/profile-creation/upload-photo");
+    navigateTo("/profile-creation/partner-preferences");
   };
 
   // Reusable Select field component

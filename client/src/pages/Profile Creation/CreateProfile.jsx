@@ -13,12 +13,14 @@ import FamilyDetails from "../FamilyDetails/FamilyDetails";
 import Family from "../../components/Family/Family";
 import PhotoUpload from "../../components/PhotoUpload/PhotoUpload";
 import { showErrorToast, showSuccessToast } from "../../lib/toast";
+import UploadPartnerPreferences from "../../components/Give Partner Preferences/UploadPartnerPreferences";
 
 const CreateProfile = ({ steps }) => {
   const navigateTo = useNavigate();
   const { step } = useParams();
 
   const gender = localStorage.getItem("gender");
+  const religion = localStorage.getItem("religion");
 
   const [formData, setFormData] = useState({
     language: [],
@@ -36,6 +38,7 @@ const CreateProfile = ({ steps }) => {
     hasChildren: "",
     diet: "",
     height: "",
+    physicalStatus: "",
     // weight: "",
     subCommunity: "",
     casteNoBar: false,
@@ -54,17 +57,14 @@ const CreateProfile = ({ steps }) => {
           .map((lang, i) =>
             i === 0 ? `${lang.title} (Mother Tongue)` : lang.title
           )
-          .join(", "),
+          .join(","),
       };
       setFormData(updatedUserInfo);
-      console.log(updatedUserInfo);
 
       const response = await axiosInstance.post(
         API_URLS.ADD_INFO,
         updatedUserInfo
       );
-      console.log("Res", response.data[0]);
-
       if (response.data[0]) {
         localStorage.setItem("userId", response.data[0].user_id);
         showSuccessToast(response.message, navigateTo, "/home");
@@ -76,8 +76,9 @@ const CreateProfile = ({ steps }) => {
       toast.error("Profile creation error. Please try again.");
     }
   };
+
   return (
-    <div className="bg-sky-400 relative flex-col flex justify-center items-center">
+    <div className="bg-gradient-to-b from-white via-purple-300  to-violet-400 relative flex-col flex justify-center items-center">
       <Header />
       {step == 1 && (
         <ProfileCreation formData={formData} setFormData={setFormData} />
@@ -93,6 +94,13 @@ const CreateProfile = ({ steps }) => {
       )}
       {steps === "upload-photo" && (
         <PhotoUpload gender={gender} handleSubmit={handleSubmit} />
+      )}
+      {steps === "partner-preferences" && (
+        <UploadPartnerPreferences
+          gender={gender}
+          religion={religion}
+          handleSubmit={handleSubmit}
+        />
       )}
       <Footer2 />
     </div>

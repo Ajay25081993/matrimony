@@ -16,6 +16,7 @@ function Arrow(props) {
         background: "#c3c3c3",
         color: "",
         borderRadius: "9px",
+        margin: "5px",
       }}
       onClick={onClick}
     />
@@ -23,21 +24,40 @@ function Arrow(props) {
 }
 const Carousel = () => {
   const settings = {
-    dots: true,
+    // dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 3, // 1 slide at a time (containing 3 cards)
     slidesToScroll: 3,
     nextArrow: <Arrow />,
     prevArrow: <Arrow />,
+    responsive: [
+      {
+        breakpoint: 1024, // Below 1024px
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+        },
+      },
+      {
+        breakpoint: 768, // Below 768px (tablets)
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
   return (
-    <div className="container w-6xl">
-      <Slider {...settings}
-     >
+    <div className="container lg:w-6xl w-90">
+      <Slider {...settings}>
         {success.map((data) => {
           return (
-            <Card image={data.image} name={data.name} feedback={data.feedback}/>
+            <Card
+              image={data.image}
+              name={data.name}
+              feedback={data.feedback}
+            />
           );
         })}
       </Slider>

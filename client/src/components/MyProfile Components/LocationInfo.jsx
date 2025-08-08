@@ -16,7 +16,9 @@ const LocationInfo = ({ userData, userInfo, onSave }) => {
   return (
     <div className="profileComponent !gap-1 ">
       <div className="flex w-full justify-between items-center">
-        <p className="text-xl font-normal text-gray-400">Groom's Location</p>
+        <p className="text-xl font-normal text-gray-400">
+          {userData.gender === "Male" ? "Groom" : "Bride"}'s Location
+        </p>
         {!isEditing ? (
           <button
             className="bg-blue-500 text-white px-1 text-sm rounded-sm cursor-pointer"

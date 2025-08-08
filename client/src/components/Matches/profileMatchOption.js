@@ -5,12 +5,12 @@ export const profileDetails = [
     title: "Matches with photos",
     subtitle: "Matches that have added photos",
   },
-  {
-    url: "/matches/profiles-with-horoscope",
-    icon: "ri-sun-line",
-    title: "Matches with horoscope",
-    subtitle: "Matches that have added horoscope",
-  },
+  // {
+  //   url: "/matches/profiles-with-horoscope",
+  //   icon: "ri-sun-line",
+  //   title: "Matches with horoscope",
+  //   subtitle: "Matches that have added horoscope",
+  // },
   {
     url: "/matches/hobby-matches",
     icon: "ri-music-2-line",
@@ -23,7 +23,7 @@ export const activity = [
   {
     url: "/matches/shortlisted-by-you",
     icon: "ri-star-s-fill",
-    title: "Shortlisted by you",
+    title: "Liked by you",
     subtitle: " Matches you have shortlisted",
   },
   {
@@ -35,11 +35,11 @@ export const activity = [
   {
     url: "/matches/shortlisted-you",
     icon: "ri-user-star-line",
-    title: "Shortlisted you",
+    title: "Liked you",
     subtitle: "Matches who have shortlisted your profile",
   },
   {
-    url: "",
+    url: "/matches/viewed-by-you",
     icon: "ri-user-heart-line",
     title: "Viewed by you",
     subtitle: "Matches you have viewed",
@@ -48,13 +48,13 @@ export const activity = [
 
 export const nearByMatches = [
   {
-    url: " ",
+    url: "/matches/newly-joined",
     icon: "ri-user-add-line",
     title: "Newly Joined",
     subtitle: " Matches who joined within the last 30 days",
   },
   {
-    url: " ",
+    url: "/matches/nearby-matches",
     icon: " ri-user-location-line",
     title: "Nearby matches",
     subtitle: "Matches near your location",

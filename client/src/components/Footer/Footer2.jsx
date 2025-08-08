@@ -4,7 +4,7 @@ const Footer2 = () => {
   return (
     <div className=" w-full bg-white flex justify-center items-center mt-2 flex-col">
       <div className="p-4 flex flex-col justify-center items-center gap-10">
-        <p className="text-3xl">Why register on Shaadi.com?</p>
+        <p className="text-3xl">Why register on SoulBandhan.com?</p>
         <div className="bg-red-500 h-[2px] w-20 "></div>
 
         <div className="w-5xl flex justify-center items-center gap-25 text-center">
@@ -39,7 +39,7 @@ const Footer2 = () => {
         </div>
       </div>
       <div className="border-t-1 border-t-gray-400 w-full flex justify-around text-sm text-gray-500 p-2 items-center">
-        <p>1996-2025 Shaadi.com - The World's No.1 Matchmaking Service <sup>TM</sup></p>
+        <p>1996-2025 SoulBandhan.com - The World's No.1 Matchmaking Service <sup>TM</sup></p>
         <p>Passionately created by <span className="text-sky-400">S & R group</span> </p>
      </div>
     </div>

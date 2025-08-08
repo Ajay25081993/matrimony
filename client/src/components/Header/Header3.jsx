@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "../../assets/SoulBandhan.png";
 import { Link, useNavigate } from "react-router-dom";
 import Hover from "../ProfileHover/Hover";
+import axiosInstance from "../../lib/axios";
+import { API_URLS } from "../../constants/apiUrls";
 const Header = ({
   openPartnerPreferences,
   setOpenPartnerPreferences,
@@ -15,9 +17,9 @@ const Header = ({
   setOpenMyPhotos,
   openMore,
   setOpenMore,
-  profilePic,
-  userData
 }) => {
+  const [userData, setUserData] = useState([]);
+  const id = localStorage.getItem("userId");
   const navigate = useNavigate();
   const openInbox = () => {
     navigate("/inbox");
@@ -31,7 +33,7 @@ const Header = ({
   const openMyPhotosPage = () => {
     navigate("/my-photos");
   };
-  const openMorePage = () => {
+  const openInterestPage = () => {
     navigate("/more");
   };
   const openPartnerPreferencesPage = () => {
@@ -40,6 +42,23 @@ const Header = ({
   const openHomePage = () => {
     navigate("/home");
   };
+
+  const fetchData = async () => {
+    try {
+      const dataResponse = await axiosInstance.get(
+        `${API_URLS.GET_USER_BY_ID}/${id}`
+      );
+
+      setUserData(dataResponse.data[0]);
+    } catch (err) {
+      console.error("Failed to fetch user info:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   // bg-[#a45ac1] #470f65dd
   return (
     <div className="w-full fixed top-0 left-0 z-50 backdrop-blur-sm bg-[#470f65dd]">
@@ -67,23 +86,34 @@ const Header = ({
 
           <div className="cursor-pointer flex  items-center gap-1">
             <i className="ri-group-2-fill  text-xl mt-1"></i>
-           <Link to='/matches/all-matches'>
-
-           <span>
-              Matches
-              <sup className="bg-yellow-50 text-black text-[15px] px-1 rounded-full">
-                100
-              </sup>
-            </span>
-           </Link>
-            
+            <Link to="/matches/all-matches">
+              <span>
+                Matches
+                <sup className="bg-yellow-50 text-black text-[15px] px-1 rounded-full">
+                  100
+                </sup>
+              </span>
+            </Link>
           </div>
 
           <div className="cursor-pointer flex  items-center gap-1">
-            <i class="ri-search-line text-xl mt-1"></i>
-            <span>Search</span>
+            <i className="ri-group-2-fill  text-xl mt-1"></i>
+            <Link to="/interests">
+              <span>
+                Interests
+                <sup className="bg-yellow-50 text-black text-[15px] px-1 rounded-full">
+                  100
+                </sup>
+              </span>
+            </Link>
           </div>
 
+          <Link to="/search">
+            <div className="cursor-pointer flex  items-center gap-1">
+              <i class="ri-search-line text-xl mt-1"></i>
+              <span>Search</span>
+            </div>
+          </Link>
           <span
             onClick={() => {
               openInbox();
@@ -95,10 +125,10 @@ const Header = ({
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="border-1 border-white px-6 py-0.5 flex items-center gap-1 text-white cursor-pointer">
+          {/* <div className="border-1 border-white px-6 py-0.5 flex items-center gap-1 text-white cursor-pointer">
             <i class="ri-vip-crown-fill mt-1"></i>
             <p>Upgrade Now</p>
-          </div>
+          </div> */}
           <div className="flex items-center gap-2 cursor-pointer text-white">
             <span>Help</span>
             <i class="ri-arrow-down-s-line mt-1"></i>
@@ -107,7 +137,7 @@ const Header = ({
             <div className="flex items-center gap-2 cursor-pointer text-white">
               <div className="h-12 w-12 transition-all duration-300 ease-in-out overflow-hidden rounded-full relative">
                 <img
-                  src={profilePic}
+                  src={userData.profilePic}
                   className="object-cover w-full"
                   alt=""
                 />
@@ -115,7 +145,10 @@ const Header = ({
 
               <i class="ri-arrow-down-s-line mt-1"></i>
             </div>
-            <Hover userData={userData} className="group-hover:block hidden top-12 -right-18" />
+            <Hover
+              userData={userData}
+              className="group-hover:block hidden top-12 -right-18"
+            />
           </div>
         </div>
       </div>
@@ -160,7 +193,6 @@ const Header = ({
             }`}
             onClick={() => {
               openMyPhotosPage();
-              
             }}
           >
             My Photos

@@ -1,11 +1,11 @@
 import React from "react";
-import Logo from "../../assets/logo2.png";
+import Logo from "../../assets/SoulBandhan.png";
 
 const Header = () => {
   return (
-    <div className="absolute top-0 w-full px-50 py-5 bg-white shadow-md shadow-gray-500">
-      <div>
-        <img src={Logo} alt="" />
+    <div className="absolute top-0 w-full px-50 bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800 shadow-md shadow-gray-900">
+      <div className="w-35 ">
+        <img src={Logo} className="object-cover w-full" alt="" />
       </div>
 
       {/* <div className="flex items-center gap-3 text-white">

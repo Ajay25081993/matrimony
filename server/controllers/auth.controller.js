@@ -5,6 +5,7 @@ import generateToken from "../jwt/token.js";
 
 export const register = async (req, res) => {
   let {
+    age,
     community,
     createdFor,
     dob,
@@ -32,6 +33,7 @@ export const register = async (req, res) => {
     let encrypted_password = await bcrypt.hash(password, salt);
 
     let newUser = {
+      age,
       community,
       createdFor,
       dob,
@@ -76,14 +78,14 @@ export const login = async (req, res) => {
     });
     if (!checkUser) return successResponse(res, "Invalid credentials", [], 200);
 
-    bcrypt.compare(password, checkUser.password,async (err, data) => {
+    bcrypt.compare(password, checkUser.password, async (err, data) => {
       if (err || !data)
         return successResponse(res, "Invalid credentials", [], 200);
 
       const payload = { user: { user_id: checkUser.id } };
 
       let access_token = await generateToken(payload);
-      let refresh_token =await generateToken(payload);
+      let refresh_token = await generateToken(payload);
 
       delete checkUser.password;
 

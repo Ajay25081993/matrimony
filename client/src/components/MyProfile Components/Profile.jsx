@@ -33,7 +33,6 @@ const Profile = () => {
   const goPreviewPage = () => {
     navigate("/profile-preview");
   };
-console.log(userInfo);
 
   return (
     <div className="profilePhotoComponent">

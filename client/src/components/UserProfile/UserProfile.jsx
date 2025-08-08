@@ -5,64 +5,127 @@ import user from "../../assets/user.png";
 import phone from "../../assets/phone.png";
 import family from "../../assets/familyIcon.png";
 import lifestyle from "../../assets/lifestyle.png";
-import { calculateAge } from "../../components/MyProfile Components/ageCalculate";
-
 import axiosInstance from "../../lib/axios";
 import { API_URLS } from "../../constants/apiUrls";
+import BasicPreferences from "./BasicPreferences";
+import ReligiousPreference from "./ReligiousPreference";
+import ProfessionalPreference from "./ProffesionalPreference";
+import LocationPreferences from "./LocationPreference";
 
-const UserProfile = () => {
+const UserProfile = ({ userData, userInfo, userPreference }) => {
+  const [totalCount, setTotalCount] = useState(0);
+  const [basicCount, setBasicCount] = useState(0);
+  const [religiousCount, setReligiousCount] = useState(0);
+  const [professionalCount, setProfessionalCount] = useState(0);
+  const [loctionCount, setLocationCount] = useState(0);
   const [openMenu, setOpenMenu] = useState(false);
-  const [shortlist, setShortlist] = useState(false);
-  const [userInfo, setUserInfo] = useState([]);
-  const [userData, setUserData] = useState([]);
-  useEffect(() => {
-    const user_id = localStorage.getItem("user_id");
+  const [like, setLike] = useState(false);
+  const id = localStorage.getItem("userId");
+  const [loggedInUserData, setloggedInUserData] = useState([]);
+  const [loggedInUserInfo, setLoggedInUserInfo] = useState([]);
+  const fetchData = async () => {
+    try {
+      const dataResponse = await axiosInstance.get(
+        `${API_URLS.GET_USER_BY_ID}/${id}`
+      );
 
-    const fetchData = async (user_id) => {
-      try {
-        const dataResponse = await axiosInstance.get(
-          `${API_URLS.GET_USER_BY_ID}/${user_id}`
-        );
-        const infoResponse = await axiosInstance.get(
-          `${API_URLS.GET_INFO_BY_USER_ID}/${user_id}`
-        );
-        console.log(dataResponse);
-        console.log(infoResponse);
+      const infoResponse = await axiosInstance.get(
+        `${API_URLS.GET_INFO_BY_USER_ID}/${id}`
+      );
 
-        setUserInfo(infoResponse.data[0]);
-        setUserData(dataResponse.data[0]);
-      } catch (err) {
-        console.error("Failed to fetch user info:", err);
-      }
-    };
-
-    fetchData(user_id);
-  }, []);
-  const shorlistProfile = () => {
-    setShortlist((prev) => !prev);
+      setLoggedInUserInfo(infoResponse.data[0]);
+      setloggedInUserData(dataResponse.data[0]);
+      return dataResponse.data[0];
+    } catch (err) {
+      console.error("Failed to fetch user info:", err);
+    }
   };
 
+  const fetchLikes = async (user) => {
+    try {
+      const response = await axiosInstance.get(
+        `${API_URLS.GET_LIKED_USER}/${user.id}`
+      );
+
+      const isLiked = response.data.some(
+        (like) => like.liked_id === userData.id
+      );
+      setLike(isLiked);
+    } catch (err) {
+      console.error("Failed to fetch likes:", err);
+    }
+  };
+  useEffect(() => {
+    const fetchAll = async () => {
+      fetchData();
+    };
+    fetchAll();
+  }, []);
+
+  useEffect(() => {
+    if (loggedInUserData.id && userData.id) {
+      fetchLikes(loggedInUserData);
+    }
+  }, [loggedInUserData, userData]);
+
+  const likeUser = async () => {
+    try {
+      const response = await axiosInstance.post(API_URLS.LIKE_USER, {
+        liker_id: loggedInUserData.id,
+        liked_id: userData.id,
+      });
+      console.log(response);
+
+      if (response.data[0]) {
+        setLike(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const dislikeUser = async () => {
+    try {
+      const response = await axiosInstance.delete(
+        `${API_URLS.REMOVE_LIKE}/${userData.id}`
+      );
+      console.log(response);
+
+      if (response.data[0] === "deleted") {
+        setLike(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    setTotalCount(
+      () => basicCount + religiousCount + professionalCount + loctionCount
+    );
+  }, [basicCount, religiousCount, professionalCount, loctionCount]);
+
   return (
-    <div className="flex flex-col px-65 pt-30  gap-10 justify-center ">
-      <div className="w-5xl shadow-md rounded-lg shadow-gray-500 py-4 px-5  flex gap-2 ">
+    <div className="flex flex-col px-65 pt-30 gap-10 justify-center ">
+      <div className="lg:w-5xl lg:flex-row md:w-2xl sm:w-50 sm:flex-col  shadow-md rounded-lg shadow-gray-500 py-4 px-5  flex gap-2 ">
         <div className="bg-gray-200 rounded-lg overflow-hidden  w-110 h-75">
-          <img src={boyAvatar} className="object-cover w-full" alt="" />
+          <img
+            src={userData.profilePic}
+            className="object-cover w-full"
+            alt=""
+          />
         </div>
 
         <div className="w-full p-4 relative">
           <div className="flex justify-end items-center gap-2 text-gray-500 ">
-            <div
-              onClick={() => shorlistProfile()}
-              className="bg-purple-100 px-2 rounded-full py-1 text-sm cursor-pointer"
-            >
-              {shortlist ? (
-                <>
-                  <i class="ri-heart-add-fill text-purple-500"></i> Shortlisted
-                </>
+            <div className="bg-purple-100 px-2 rounded-full py-1 text-sm cursor-pointer">
+              {like ? (
+                <div onClick={() => dislikeUser()}>
+                  <i class="ri-heart-add-fill text-purple-500"></i> Liked
+                </div>
               ) : (
-                <>
-                  <i class="ri-heart-add-line"></i> Shortlist
-                </>
+                <div onClick={() => likeUser()}>
+                  <i class="ri-heart-add-line"></i> Like
+                </div>
               )}
             </div>
             <div
@@ -72,7 +135,14 @@ const UserProfile = () => {
               <i class="ri-more-2-fill"></i>
             </div>
           </div>
-
+          {like && (
+            <div className="text-sm py-2 space-x-1 flex items-center">
+              <i class="ri-heart-add-fill text-md text-purple-600"></i>
+              <p className="mb-0.5">
+                You have Liked {userData.gender === "Male" ? "him" : "her"}
+              </p>{" "}
+            </div>
+          )}
           <div
             className={`${
               openMenu ? "max-h-31 scale-3d" : "max-h-0 scale-95"
@@ -92,24 +162,38 @@ const UserProfile = () => {
           </div>
 
           <div className="">
-            <p className="font-bold">Sulogna das</p>{" "}
+            <p className="font-bold">
+              {userData.firstName} {userData.lastName}
+            </p>{" "}
             <p className="text-gray-500 mb-5">Last seen Few hours ago </p>
             <div className="flex gap-2 flex-wrap ">
-              <div>Never Married</div>
+              <div>{userInfo.maritalStatus}</div>
               <div className="text-purple-400">●</div>
-              <div> Profile created by self</div>
+              <div>
+                {" "}
+                Profile created by
+                {userData.createdFor?.endsWith("Self")
+                  ? "Self"
+                  : userData.createdFor?.endsWith("Daughter") ||
+                    userData.createdFor?.endsWith("Son")
+                  ? "Parents"
+                  : " Friend"}
+              </div>
               <div className="text-purple-400">●</div>
-              <div>19 yrs</div>
+              <div>{userData.age} yrs</div>
               <div className="text-purple-400">●</div>
-              <div>5'4"</div>
+              <div>{userInfo.height}</div>
               <div className="text-purple-400">●</div>
-              <div>Mahishya(Caste No Bar)</div>
+              <div>
+                {userInfo.subCommunity}
+                {userInfo.casteMatters === "1" ? " (Caste No Bar)" : ""}
+              </div>
               <div className="text-purple-400">●</div>
-              <div>B.Com.</div>
+              <div>{userInfo.qualification}</div>
               <div className="text-purple-400">●</div>
-              <div>Student</div>
+              <div>{userInfo.workWith}</div>
               <div className="text-purple-400">●</div>
-              <div>Kolkata</div>
+              <div>{userInfo.city}</div>
             </div>
           </div>
 
@@ -132,347 +216,249 @@ const UserProfile = () => {
         </div>
       </div>
       <div className="w-4xl border-1 border-gray-300 rounded-xl p-5 space-y-4">
-        {/* Personal Information */}
-        <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
-          <img src={user} alt="" className="w-10" />
-          <p className="text-lg font-semibold">Personal Information</p>
-        </div>
-        <div className="flex gap-15 px-4">
-          <div className="font-light space-y-4">
-            <div>Age</div>
-            <div> Height</div>
-            <div>Spoken Languages </div>
-            <div>Profile Created By</div>
-            <div>Marital Status</div>
-            <div>Lives In</div>
-            <div>Eating Habits</div>
-            <div>Religion</div>
-            <div>Caste</div>
-            <div>Gothra</div>
-            <div>Date Of Birth</div>
-            <div>Star</div>
-            <div>Rassi</div>
-            <div>Horoscope</div>
-            <div>Employment</div>
-            <div>Education</div>
-            <div>Occupation</div>
-            <div>Works At</div>
+        <div className="space-y-4">
+          {/* Personal Information */}
+          <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
+            <img src={user} alt="" className="w-10" />
+            <p className="text-lg font-semibold">Personal Information</p>
           </div>
+          <div className="flex gap-15 px-4">
+            <div className="font-light space-y-4">
+              <div>Age</div>
+              <div> Height</div>
+              <div>Spoken Languages </div>
+              <div>Profile Created By</div>
+              <div>Marital Status</div>
+              <div>Lives In</div>
+              <div>Eating Habits</div>
+              <div>Religion</div>
+              <div>Caste</div>
+              <div>Gothra</div>
+              <div>Date Of Birth</div>
+              <div>Star</div>
+              <div>Rassi</div>
+              <div>Horoscope</div>
+              <div>Employment</div>
+              <div>Education</div>
+              <div>Occupation</div>
+              <div>Works At</div>
+            </div>
 
-          <div className="font-semibold space-y-4">
-            <div>: {calculateAge(userData.dob)} Years</div>
-            <div>: 5'8"</div>
-            <div>: {userInfo.languageKnown}</div>
-            <div>
-              :{" "}
-              {userData.createdFor?.endsWith("Self")
-                ? "Self"
-                : userData.createdFor}
-            </div>
-            <div>: {userInfo.maritalStatus}</div>
-            <div>: {userInfo.eatingHabit}</div>
-            <div>
-              : {userInfo.city}, {userData.state}
-            </div>
-            <div>: {userData.religion}</div>
-            <div>: {userInfo.subCommunity}</div>
-            <div>: {userInfo.gothra}</div>
-            <div>
-              :{" "}
-              <span className="text-orange-400 cursor-pointer text-sm">
-                <i class="ri-lock-line"></i> Upgrade to view{" "}
-                <i className="ri-arrow-right-s-line mt-1"></i>
-              </span>{" "}
-            </div>
-            <div>
-              :{" "}
-              <span className="text-orange-400 cursor-pointer text-sm">
-                <i class="ri-lock-line"></i> Upgrade to view{" "}
-                <i className="ri-arrow-right-s-line mt-1"></i>
-              </span>{" "}
-            </div>
-            <div>
-              :{" "}
-              <span className="text-orange-400 cursor-pointer text-sm">
-                <i class="ri-lock-line"></i> Upgrade to view{" "}
-                <i className="ri-arrow-right-s-line mt-1"></i>
-              </span>{" "}
-            </div>
-            <div>
-              :{" "}
-              <span className="text-orange-400 cursor-pointer text-sm">
-                <i class="ri-lock-line"></i> Upgrade to view{" "}
-                <i className="ri-arrow-right-s-line mt-1"></i>
-              </span>{" "}
-            </div>
-            <div>: {userInfo.workWith}</div>
-            <div>: {userInfo.qualification}</div>
-            <div>: {userInfo.workWith}</div>
-            <div>
-              :{" "}
-              <span className="text-orange-400 cursor-pointer text-sm">
-                <i class="ri-lock-line"></i> Upgrade to view{" "}
-                <i className="ri-arrow-right-s-line mt-1"></i>
-              </span>
-            </div>
-          </div>
-        </div>
-        {/* Family Information */}
-        <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
-          <img src={family} alt="" className="w-10" />
-          <p className="text-lg font-semibold">Family Information</p>
-        </div>
-        <div className="flex gap-20 px-4">
-          <div className="font-light space-y-4">
-            <div>Parents</div>
-            {userInfo.brother ? <div>Brother</div> : ""}
-            {userInfo.sister ? <div>Sister</div> : ""}
-
-            <div>Ancestral Origin</div>
-          </div>
-
-          <div className="font-semibold space-y-4">
-            <div>
-              : Father is a {userInfo.father}, Mother is a {userInfo.mother}
-            </div>
-            {userInfo.brother ? <div>: {userInfo.brother}</div> : ""}
-            {userInfo.sister ? <div>: {userInfo.sister}</div> : ""}
-            <div>: Not specified</div>
-          </div>
-        </div>
-        {/* Contact Information */}
-        <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
-          <img src={phone} alt="" className="w-10" />
-          <p className="text-lg font-semibold">Contact Information</p>
-        </div>
-        <div className="flex gap-20 px-4">
-          <div className="font-light">
-            <div>Mobile Number</div>
-          </div>
-
-          <div className="font-semibold">
-            <div>
-              :{" "}
-              <span className="text-orange-400 cursor-pointer text-sm">
-                <i class="ri-lock-line"></i>{" "}
-                <span className="text-black">
-                  +91 70<span className="text-xl">********</span>
+            <div className="font-semibold space-y-4">
+              <div>: {userData.age} Years</div>
+              <div>: {userInfo.height}</div>
+              <div>: {userInfo.languageKnown}</div>
+              <div>
+                :{" "}
+                {userData.createdFor?.endsWith("Self")
+                  ? "Self"
+                  : userData.createdFor?.endsWith("Daughter") ||
+                    userData.createdFor?.endsWith("Son")
+                  ? "Parents"
+                  : "Friend"}
+              </div>
+              <div>: {userInfo.maritalStatus}</div>
+              <div>
+                : {userInfo.city}, {userData.state}
+              </div>
+              <div>
+                :{" "}
+                {userInfo.eatingHabit ? userInfo.eatingHabit : "Not specified"}
+              </div>
+              <div>: {userData.religion}</div>
+              <div>: {userInfo.subCommunity}</div>
+              <div>: {userInfo.gothra ? userInfo.gothra : "Not specified"}</div>
+              <div>
+                :{" "}
+                <span className="text-orange-400 cursor-pointer text-sm">
+                  <i class="ri-lock-line"></i> Upgrade to view{" "}
+                  <i className="ri-arrow-right-s-line mt-1"></i>
                 </span>{" "}
-                Upgrade to view <i className="ri-arrow-right-s-line mt-1"></i>
-              </span>
+              </div>
+              <div>
+                :{" "}
+                <span className="text-orange-400 cursor-pointer text-sm">
+                  <i class="ri-lock-line"></i> Upgrade to view{" "}
+                  <i className="ri-arrow-right-s-line mt-1"></i>
+                </span>{" "}
+              </div>
+              <div>
+                :{" "}
+                <span className="text-orange-400 cursor-pointer text-sm">
+                  <i class="ri-lock-line"></i> Upgrade to view{" "}
+                  <i className="ri-arrow-right-s-line mt-1"></i>
+                </span>{" "}
+              </div>
+              <div>
+                :{" "}
+                <span className="text-orange-400 cursor-pointer text-sm">
+                  <i class="ri-lock-line"></i> Upgrade to view{" "}
+                  <i className="ri-arrow-right-s-line mt-1"></i>
+                </span>{" "}
+              </div>
+              <div>: {userInfo.workWith}</div>
+              <div>: {userInfo.qualification}</div>
+              <div>: {userInfo.workWith}</div>
+              <div>
+                :{" "}
+                <span className="text-orange-400 cursor-pointer text-sm">
+                  <i class="ri-lock-line"></i> Upgrade to view{" "}
+                  <i className="ri-arrow-right-s-line mt-1"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+          {/* Family Information */}
+          <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
+            <img src={family} alt="" className="w-10" />
+            <p className="text-lg font-semibold">Family Information</p>
+          </div>
+          <div className="flex gap-20 px-4">
+            <div className="font-light space-y-4">
+              <div>Parents</div>
+              {userInfo.brother ? <div>Brother</div> : ""}
+              {userInfo.sister ? <div>Sister</div> : ""}
+
+              <div>Ancestral Origin</div>
+            </div>
+
+            <div className="font-semibold space-y-4">
+              <div>
+                : Father is a {userInfo.father}, Mother is a {userInfo.mother}
+              </div>
+              {userInfo.brother ? <div>: {userInfo.brother}</div> : ""}
+              {userInfo.sister ? <div>: {userInfo.sister}</div> : ""}
+              <div>: Not specified</div>
+            </div>
+          </div>
+          {/* Contact Information */}
+          <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
+            <img src={phone} alt="" className="w-10" />
+            <p className="text-lg font-semibold">Contact Information</p>
+          </div>
+          <div className="flex gap-20 px-4">
+            <div className="font-light">
+              <div>Mobile Number</div>
+            </div>
+
+            <div className="font-semibold">
+              <div>
+                :{" "}
+                <span className="text-orange-400 cursor-pointer text-sm">
+                  <i class="ri-lock-line"></i>{" "}
+                  <span className="text-black">
+                    +91 {userData.phoneNo?.slice(0, 2)}
+                    <span className="text-xl">********</span>
+                  </span>{" "}
+                  Upgrade to view <i className="ri-arrow-right-s-line mt-1"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+          {/* About Myself */}
+          <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
+            <img src={user} alt="" className="w-10" />
+            <p className="text-lg font-semibold">About Myself</p>
+          </div>
+          <div className="flex flex-col gap-2 px-4">
+            <h2 className="text-xl font-semibold">
+              About {userData.firstName + " " + userData.lastName}
+            </h2>
+            <p>{userInfo.aboutMe}</p>
+          </div>
+          {/* Lifestyle */}
+          <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
+            <img src={lifestyle} alt="" className="w-10" />
+            <p className="text-lg font-semibold">Lifestyle</p>
+          </div>
+          <div className="flex gap-20 px-4">
+            <div className="font-light space-y-4">
+              <div>Smoking Habits</div>
+              <div>Drinking Habits</div>
+            </div>
+            <div className="font-semibold space-y-4">
+              <div>: Doesn't Smoke</div>
+              <div>: Doesn't Drink</div>
             </div>
           </div>
         </div>
-        {/* About Myself */}
-        <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
-          <img src={user} alt="" className="w-10" />
-          <p className="text-lg font-semibold">About Myself</p>
-        </div>
-        <div className="flex flex-col gap-2 px-4">
-          <h2 className="text-xl font-semibold">
-            About {userData.firstName + " " + userData.lastName}
-          </h2>
-          <p>{userInfo.aboutMe}</p>
-        </div>
-        {/* Lifestyle */}
-        <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
-          <img src={lifestyle} alt="" className="w-10" />
-          <p className="text-lg font-semibold">Lifestyle</p>
-        </div>
-        <div className="flex gap-20 px-4">
-          <div className="font-light space-y-4">
-            <div>Smoking Habits</div>
-            <div>Drinking Habits</div>
-          </div>
-          <div className="font-semibold space-y-4">
-            <div>: Doesn't Smoke</div>
-            <div>: Doesn't Drink</div>
-          </div>
-        </div>
-        {/* Partner Preferences */}
-        {/* Basic Preferences */}
-        <div className=" w-full text-lg font-semibold flex justify-center gap-4 p-6">
-          <i class="ri-hearts-fill text-pink-300 -rotate-16"></i> Her Partner
-          Preferences <i class="ri-hearts-fill text-pink-300 rotate-16"></i>
-        </div>
 
+        {/* Partner Preferences */}
+        <div className=" w-full text-lg font-semibold flex justify-center gap-4 p-6">
+          <i class="ri-hearts-fill text-pink-300 -rotate-16"></i>{" "}
+          {userData.gender === "Male" ? "His" : "Her"} Partner Preferences{" "}
+          <i class="ri-hearts-fill text-pink-300 rotate-16"></i>
+        </div>
         <div className="flex justify-center items-center flex-col">
           <div className="bg-gradient-to-b from-purple-300 via-purple-200  to-white relative w-xl p-3 flex border-1 border-b-violet-300  justify-between border-violet-500 rounded-xl">
             <div className="w-20 h-20 overflow-hidden rounded-lg">
-              <img src={boyAvatar} alt="" />
+              <img src={userData.profilePic} alt="" />
             </div>
-            <div className="flex justify-center items-center text-lg font-semibold">
-              You match 19/19 of her preferences
+            <div className="flex flex-col justify-center items-center text-lg font-semibold">
+              <p>
+                {" "}
+                You match{" "}
+                <span className="text-violet-700 mr-1.5">
+                  {Math.round((totalCount / 18) * 100)}%
+                </span>
+                of {userData.gender === "Male" ? "His" : "Her"} preferences
+              </p>
+              <div className="w-70 h-3 mt-3 bg-white border border-gray-200  rounded-full overflow-hidden">
+                <div
+                  className="bg-purple-400 h-full rounded-full transition-all duration-300"
+                  style={{ width: `${Math.round((totalCount / 18) * 100)}%` }}
+                ></div>
+              </div>
+              {/* <span className="text-violet-700">{Math.min(Math.round(totalCount * 5.5), 100)}%</span> */}
             </div>
             <div className="w-20 h-20 overflow-hidden rounded-lg">
-              <img src={boyAvatar} alt="" />
+              <img src={loggedInUserData.profilePic} alt="" />
             </div>
           </div>
         </div>
 
-        <div className="flex items-center  gap-2 bg-purple-100  rounded-md px-3 py-2">
-          <p className="text-lg font-semibold">Basic Preferences</p>
-        </div>
-        <div className="flex gap-20 px-40">
-          <div className="font-light space-y-4">
-            <div>
-              Preferred{" "}
-              {userData.gender === "Male" ? "Bride's Age" : "Groom's Age"}{" "}
-            </div>
-            <div>Preferred Height</div>
-            <div>Preferred Marital Status</div>
-            <div>Preferred Mother Tongue</div>
-            <div>Preferred Physical Status</div>
-            <div>Preferred Eating Habits</div>
-            <div>Preferred Smoking Habits</div>
-            <div>Preferred Drinking Habits</div>
-          </div>
-          <div className="font-semibold space-y-4">
-            <div> 18-22 yrs</div>
-            <div> 4'8" - 5'8"</div>
-            <div> Never Married</div>
-            <div> Bengali</div>
-            <div> Normal </div>
-            <div> Doesn't Matter</div>
-            <div> Doesn't Matter</div>
-            <div> Doesn't Matter</div>
-          </div>
-
-          <div className="space-y-3 text-2xl flex flex-col">
-            <div className="h-7 flex items-center">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-            <div className="flex items-center h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-          </div>
-        </div>
+        {/* Basic Preferences */}
+        <BasicPreferences
+          userPreference={userPreference}
+          loggedInUserInfo={loggedInUserInfo}
+          age={loggedInUserData.age}
+          setBasicCount={setBasicCount}
+        />
         {/* Religious Preferences */}
-        <div className="flex items-center  gap-2 bg-purple-100  rounded-md px-3 py-2">
-          <p className="text-lg font-semibold">Religious Preferences</p>
-        </div>
-        <div className="flex gap-20 px-40">
-          <div className="font-light space-y-4">
-            <div>Preferred Religion</div>
-            <div>Preferred Caste</div>
-            <div>Preferred Star</div>
-            <div>Preferred Dosham</div>
-          </div>
-          <div className="font-semibold ml-12 space-y-4">
-            <div>Hindu</div>
-            <div>Mahishya</div>
-            <div>Any</div>
-            <div>Doesn't Matter</div>
-          </div>
-          <div className="space-y-3 text-2xl flex flex-col">
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-          </div>
-        </div>
-        {/* Professional Preferences */}
-        <div className="flex items-center  gap-2 bg-purple-100  rounded-md px-3 py-2">
-          <p className="text-lg font-semibold">Professional Preferences</p>
-        </div>
-        <div className="flex gap-16 px-40">
-          <div className="font-light space-y-4">
-            <div>Preferred Education</div>
-            <div>Preferred Employment Type</div>
-            <div>Preferred Occupation</div>
-            <div>Preferred Annual Income</div>
-          </div>
-          <div className="font-semibold space-y-4">
-            <div>Bachelors more...</div>
-            <div>Any</div>
-            <div>Any</div>
-            <div>Any</div>
-          </div>
-          <div className="space-y-3 text-2xl flex flex-col">
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-          </div>
-        </div>
+        <ReligiousPreference
+          userPreference={userPreference}
+          loggedInUserInfo={loggedInUserInfo}
+          religion={loggedInUserData.religion}
+          setReligiousCount={setReligiousCount}
+        />
 
-        <div className="flex items-center  gap-2 bg-purple-100 rounded-md px-3 py-2">
-          <p className="text-lg font-semibold">Location Preferences</p>
-        </div>
-        <div className="flex gap-23 px-40">
-          <div className="font-light space-y-4">
-            <div>Preferred Country</div>
-            <div>Preferred Residing State</div>
-            <div>Preferred Residing City</div>
-          </div>
-          <div className="font-semibold space-y-4">
-            <div>India</div>
-            <div>West Bengal</div>
-            <div>Any</div>
-          </div>
-          <div className="space-y-3 text-2xl flex flex-col">
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-            <div className="flex items-center  h-7">
-              <i className="ri-checkbox-circle-line text-green-300"></i>
-            </div>
-          </div>
-        </div>
+        <ProfessionalPreference
+          userPreference={userPreference}
+          loggedInUserInfo={loggedInUserInfo}
+          setProfessionalCount={setProfessionalCount}
+        />
 
-        <div className="flex items-center  bg-purple-100 rounded-md px-3 py-2">
+        <LocationPreferences
+          userPreference={userPreference}
+          loggedInUserInfo={loggedInUserInfo}
+          state={loggedInUserData.state}
+          setLocationCount={setLocationCount}
+        />
+
+        {/* <div className="flex items-center  bg-purple-100 rounded-md px-3 py-2">
           <i class="ri-hearts-fill text-pink-300 text-xl -rotate-30"></i>{" "}
           <i class="ri-hearts-fill text-pink-300 text-xl rotate-30 mr-2"></i>{" "}
           <p className="text-lg font-semibold"> Both of you like</p>
         </div>
-
         <div className="flex gap-5 px-4">
           <div>Hobby</div>
           <div>: Cooking</div>
-        </div>
+        </div> */}
 
         <div className="flex items-center justify-center  px-3 py-4">
           <img src={design} className="w-500" alt="" />
         </div>
-
-        <div className="space-y-4 mt-5">
+        {/* <div className="space-y-4 mt-5">
           <div className="flex w-full justify-between">
             <p className="text-lg font-semibold">Profiles you may like</p>
             <span className="text-violet-600 cursor-pointer">
@@ -495,7 +481,7 @@ const UserProfile = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

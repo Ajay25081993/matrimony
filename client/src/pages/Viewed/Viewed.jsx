@@ -9,7 +9,7 @@ import ViewedBy from "../../components/Matches/ViewedBy";
 const Viewed = () => {
   const [userData, setUserData] = useState({});
 
-  const user_id = localStorage.getItem("user_id");
+  const user_id = localStorage.getItem("userId");
 
   const fetchData = async () => {
     try {
@@ -30,7 +30,8 @@ const Viewed = () => {
       <Header profilePic={userData.profilePic} userData={userData} />
       <div className="flex justify-center gap-5 py-30">
         <Options />
-        <ViewedBy/>      </div>
+        <ViewedBy />{" "}
+      </div>
     </div>
   );
 };

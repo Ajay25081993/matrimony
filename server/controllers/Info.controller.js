@@ -17,6 +17,7 @@ export const createInfo = async (req, res) => {
     hasChildren,
     diet,
     height,
+    physicalStatus,
     weight,
     subCommunity,
     casteNoBar,
@@ -41,6 +42,7 @@ export const createInfo = async (req, res) => {
     children: hasChildren,
     diet,
     height,
+    physicalStatus,
     subCommunity,
     casteMatters: casteNoBar,
     aboutMe: about,
@@ -74,14 +76,13 @@ export const getInfo = async (req, res) => {
   }
 };
 
-
 export const updateInfo = async (req, res) => {
   try {
     let info = await Info.findOne({ where: { user_id: req.params.user_id } });
 
     if (!info) return successResponse(res, "Info not found", [], 200);
     const { aboutText } = req.body;
-    
+
     await info.update({
       aboutMe: aboutText,
     });
@@ -92,7 +93,6 @@ export const updateInfo = async (req, res) => {
     errorResponse(res, "Server error", [], 500);
   }
 };
-
 
 export const deleteInfo = async (req, res) => {
   try {

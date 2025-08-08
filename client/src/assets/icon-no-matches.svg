@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="151.8" height="137.324" viewBox="0 0 151.8 137.324">
+    <defs>
+        <clipPath id="nw6pty14ua">
+            <path data-name="Path 1199" d="M143.658 1873.221a16.557 16.557 0 1 1 16.551-16.557 16.563 16.563 0 0 1-16.551 16.557zm27.768 8.339-11.8-11.8a20.365 20.365 0 1 0-2.881 2.913l11.8 11.773a2.035 2.035 0 0 0 2.881 0 1.983 1.983 0 0 0 0-2.886z" transform="translate(-123 -1836)" style="fill:#253252"/>
+        </clipPath>
+        <clipPath id="1hqgiewqab">
+            <path data-name="Rectangle 1173" style="fill:#253252" d="M0 0h4186.709v12938.589H0z"/>
+        </clipPath>
+    </defs>
+    <g data-name="Group 75416">
+        <g data-name="Group 75412">
+            <path data-name="Op component 1" d="M59.949 0H40.923a14.69 14.69 0 0 1 .761 4.685V6.4h16.472c-1.962 14.855-14.184 32.391-28.593 33.8a39.922 39.922 0 0 1-7.641 7.3h4.816c20.9 0 37.11-23.425 37.11-43.576A3.868 3.868 0 0 0 59.949 0zM8.409 52.7A29.314 29.314 0 0 0 0 53.924a33.515 33.515 0 0 1 8.35 6.617h.059a21.9 21.9 0 0 1 1.6 43.731 33.621 33.621 0 0 1-7.727 7.171 29.589 29.589 0 0 0 35.7-29.009A29.691 29.691 0 0 0 8.409 52.7z" transform="rotate(180 31.924 58.885)" style="fill:#cbceda"/>
+            <path data-name="Op component 2" d="M127.259 83.628a32.859 32.859 0 1 1 32.734-32.91 32.828 32.828 0 0 1-32.734 32.91z" transform="translate(-36.407 -17.91)" style="fill:#cbceda"/>
+            <path data-name="Op component 3" d="M208.116 75.543H94.454a4.3 4.3 0 0 1-4.318-4.34c0-22.713 18.375-42.171 41.067-42.171h40.163c22.592 0 41.067 19.356 41.067 42.171a4.3 4.3 0 0 1-4.317 4.34z" transform="translate(-60.633 42.441)" style="fill:#cbceda"/>
+        </g>
+        <g data-name="Group 75413" transform="translate(78.475 88.284)">
+            <circle data-name="Ellipse 114" cx="18.5" cy="18.5" r="18.5" transform="translate(2.525 2.381)" style="fill:#fff"/>
+            <g data-name="Group 3096">
+                <g data-name="Group 2591">
+                    <g data-name="Group 2468" style="clip-path:url(#nw6pty14ua)">
+                        <g data-name="Group 2467" transform="translate(-376.988 -5629.207)" style="clip-path:url(#1hqgiewqab)">
+                            <path data-name="Rectangle 1172" transform="translate(361.513 5613.588)" style="fill:#253252" d="M0 0h79v79H0z"/>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

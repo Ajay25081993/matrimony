@@ -52,9 +52,11 @@ const Login = ({ showLogin, setShowLogin, setShowRegister }) => {
     console.log("Login data submitted:", formData);
     try {
       const response = await axiosInstance.post(API_URLS.LOGIN, formData);
-      console.log("Res", response.data[0].user.id);
+      console.log("Res", response.data[0].access_token);
       if (response.data[0].access_token) {
         localStorage.setItem("userId", response.data[0].user.id);
+        localStorage.setItem("token", response.data[0].access_token);
+         localStorage.setItem("gender", response.data[0].user.gender);
         showSuccessToast(response.message, navigateTo, "/home");
       }
     } catch (error) {

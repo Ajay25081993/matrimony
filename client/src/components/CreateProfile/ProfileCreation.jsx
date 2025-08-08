@@ -7,13 +7,20 @@ import { subCommunity } from "./subCommunity";
 import { diet } from "./diet";
 import { maritalStatus } from "./maritalStatus";
 import { children } from "./Children";
-import { CircularProgress, Link } from "@mui/material";
+import {
+  CircularProgress,
+  FormControlLabel,
+  Link,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { languages } from "./language";
 import axios from "axios";
+import { physicalStatus } from "../Give Partner Preferences/allOptions";
 const ProfileCreation = ({ formData, setFormData }) => {
   const navigateTo = useNavigate();
   const [touched, setTouched] = useState({});
@@ -30,6 +37,7 @@ const ProfileCreation = ({ formData, setFormData }) => {
       height,
       hasChildren,
       subCommunity,
+      physicalStatus,
     } = formData;
     if (
       city &&
@@ -38,6 +46,7 @@ const ProfileCreation = ({ formData, setFormData }) => {
       (maritalStatus === "Never married" || hasChildren) &&
       diet &&
       height &&
+      physicalStatus &&
       subCommunity
     ) {
       setIsValid(true);
@@ -50,8 +59,13 @@ const ProfileCreation = ({ formData, setFormData }) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setTouched((prev) => ({ ...prev, [field]: true }));
   };
-
   const onNext = () => {
+    console.log(
+      formData.language.map((lang, i) =>
+        i === 0 ? `${lang.title} (Mother Tongue)` : lang.title
+      ).join(",")
+    );
+
     navigateTo(`/profile-creation/step/2`);
   };
 
@@ -334,6 +348,24 @@ const ProfileCreation = ({ formData, setFormData }) => {
                 </option>
               ))}
             </TextField> */}
+
+            <div className="w-full">
+              <p className="mb-1">Physical Status</p>
+              <RadioGroup
+                row
+                value={formData.physicalStatus}
+                onChange={(e) => handleChange("physicalStatus", e.target.value)}
+              >
+                {physicalStatus.map((status, index) => (
+                  <FormControlLabel
+                    key={index}
+                    value={status}
+                    control={<Radio />}
+                    label={status}
+                  />
+                ))}
+              </RadioGroup>
+            </div>
 
             {/* Sub-Community */}
             <TextField

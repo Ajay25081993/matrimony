@@ -13,7 +13,7 @@ const ProfilePreview = () => {
   const [userInfo, setUserInfo] = useState([]);
   const [userData, setUserData] = useState([]);
   useEffect(() => {
-    const user_id = localStorage.getItem("user_id");
+    const user_id = localStorage.getItem("userId");
 
     const fetchData = async (user_id) => {
       try {
@@ -68,8 +68,11 @@ const ProfilePreview = () => {
               <li>
                 Profile created by{" "}
                 {userData.createdFor?.endsWith("Self")
-                  ? "self"
-                  : userData.createdFor}
+                  ? "Self"
+                  : userData.createdFor?.endsWith("Daughter") ||
+                    userData.createdFor?.endsWith("Son")
+                  ? "Parents"
+                  : "Friend"}
               </li>{" "}
               <span className="text-gray-300">■</span>
               <li>{calculateAge(userData.dob)} yrs</li>{" "}
@@ -114,10 +117,13 @@ const ProfilePreview = () => {
               <div>: 5'8"</div>
               <div>: {userInfo.languageKnown}</div>
               <div>
-                :{" "}
+                :
                 {userData.createdFor?.endsWith("Self")
                   ? "Self"
-                  : userData.createdFor}
+                  : userData.createdFor?.endsWith("Daughter") ||
+                    userData.createdFor?.endsWith("Son")
+                  ? "Parents"
+                  : "Friend"}
               </div>
               <div>: {userInfo.maritalStatus}</div>
               <div>

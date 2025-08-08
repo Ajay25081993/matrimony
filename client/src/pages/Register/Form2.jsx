@@ -7,7 +7,7 @@ import { communities } from "./community";
 
 export default function Form2({ onNext, onBack, userData, setUserData }) {
   // Example for enabling/disabling button based on selections — you can enhance this with validation logic later
-  const isValid = userData.religion!=="Select" && userData.community!=='Select' && userData.state;
+  const isValid = userData.religion!=="Select" && userData.community!=='Select' && userData.state!=="Select";
 
   return (
     <div className="">

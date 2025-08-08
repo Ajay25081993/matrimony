@@ -17,24 +17,19 @@ const Home = () => {
   };
   useEffect(() => {
     const user_id = localStorage.getItem("userId");
+    console.log(user_id);
+    
     fetchData(user_id);
   }, []);
 
   return (
     <div className="bg-gray-100 w-full ">
       <Header
-      userData={userData}
-        profilePic={userData.profilePic}
         openDashboard={openDashboard}
         setOpenDashboard={setOpenDashboard}
       />
       <div className="pt-20 ">
         <Dashboard userData={userData} />
-        {/* {openMyProfile && <MyProfile userData={userData} />} */}
-        {/* {openMyPhotos && <div>My Photos Content</div>}
-        {openPartnerPreferences && <div>Partner Preferences Content</div>}
-        {openSettings && <div>Settings Content</div>}
-        {openMore && <div>More Content</div>} */}
       </div>
     </div>
   );

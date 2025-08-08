@@ -15,7 +15,7 @@ let {
   Setting,
   Notif,
   Interest,
-  Connection,
+  Connection,PartnerPreferences,
 } = sqldb;
 
 // User.sync({ force: config.seedDBForce });
@@ -32,3 +32,4 @@ let {
 // Notif.sync({ force: config.seedDBForce });
 // Interest.sync({ force: config.seedDBForce });
 // Connection.sync({ force: config.seedDBForce });
+// PartnerPreferences.sync({ force: config.seedDBForce });

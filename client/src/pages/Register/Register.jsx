@@ -66,10 +66,11 @@ const Register = ({ showRegister, setShowRegister }) => {
       createdFor: createdFor,
       age: calculateAge(dobFormatted),
     };
+    console.log(updatedUserData.age);
 
     setUserData(updatedUserData);
     localStorage.setItem("gender", updateGender);
-    navigateTo("/profile-creation/step/1");
+  
 
     try {
       const response = await axiosInstance.post(
